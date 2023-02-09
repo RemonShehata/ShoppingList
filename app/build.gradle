@@ -1,8 +1,14 @@
 plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
+    id 'io.gitlab.arturbosch.detekt'
 }
 
+apply plugin: "io.gitlab.arturbosch.detekt"
+detekt {
+    config = files("${project.rootDir}/detekt-config.yml")
+    parallel = true
+}
 android {
     namespace 'com.example.shoppinglist'
     compileSdk 33
