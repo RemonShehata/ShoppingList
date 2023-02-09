@@ -1,14 +1,17 @@
 plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
+    id 'jacoco'
     id 'io.gitlab.arturbosch.detekt'
 }
 
+apply from: '../jacoco.gradle'
 apply plugin: "io.gitlab.arturbosch.detekt"
 detekt {
     config = files("${project.rootDir}/detekt-config.yml")
     parallel = true
 }
+
 android {
     namespace 'com.example.shoppinglist'
     compileSdk 33
