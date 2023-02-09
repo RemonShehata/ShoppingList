@@ -9,6 +9,7 @@
 /build
 /captures
 *.idea/
+.idea/gradle.xml
 
 # Built application files
 *.apk
