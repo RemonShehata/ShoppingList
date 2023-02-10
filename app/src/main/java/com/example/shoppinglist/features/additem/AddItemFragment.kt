@@ -1,4 +1,4 @@
-package com.example.shoppinglist
+package com.example.shoppinglist.features.additem
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -7,9 +7,8 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.example.shoppinglist.databinding.FragmentAddItemBinding
-import com.example.shoppinglist.databinding.FragmentShoppingListBinding
-import com.example.shoppinglist.db.ShoppingItemEntity
-import com.example.shoppinglist.db.ShoppingListDao
+import com.example.shoppinglist.data.local.models.ShoppingItemEntity
+import com.example.shoppinglist.data.local.ShoppingListDao
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
