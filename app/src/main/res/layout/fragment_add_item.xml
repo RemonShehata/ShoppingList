@@ -18,6 +18,7 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/itemName2"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:hint="@string/item_name"
@@ -37,6 +38,7 @@
         app:layout_constraintTop_toBottomOf="@id/itemName">
 
         <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/itemQuantity2"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:hint="@string/quantity"
@@ -58,6 +60,7 @@
         app:layout_constraintTop_toBottomOf="@+id/itemQuantity">
 
         <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/itemDescription"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:hint="@string/description"

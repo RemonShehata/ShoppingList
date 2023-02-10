@@ -8,12 +8,18 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.example.shoppinglist.databinding.FragmentAddItemBinding
 import com.example.shoppinglist.databinding.FragmentShoppingListBinding
+import com.example.shoppinglist.db.ShoppingItemEntity
+import com.example.shoppinglist.db.ShoppingListDao
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class AddItemFragment : Fragment() {
 
     private lateinit var binding: FragmentAddItemBinding
+
+    @Inject
+    lateinit var shoppingListDao: ShoppingListDao
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -21,6 +27,15 @@ class AddItemFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentAddItemBinding.inflate(layoutInflater).apply {
+
+            saveButton.setOnClickListener {
+                val shoppingItemEntity = ShoppingItemEntity(
+                    name = binding.itemName2.text.toString(),
+                    quantity = binding.itemQuantity2.text.toString().toInt(),
+                    description = binding.itemDescription.text.toString()
+                )
+//                shoppingListDao.insertShoppingItem(shoppingItemEntity)
+            }
 
             cancelButton.setOnClickListener {
                 findNavController().navigateUp()
