@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import com.example.shoppinglist.databinding.FragmentShoppingListBinding
 
 class ShoppingListFragment : Fragment() {
@@ -17,6 +18,12 @@ class ShoppingListFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentShoppingListBinding.inflate(layoutInflater).apply {
+            floatingActionButton.setOnClickListener {
+                findNavController()
+                    .navigate(
+                        ShoppingListFragmentDirections.actionShoppingListFragmentToAddItemFragment()
+                    )
+            }
         }
 
         return binding.root
