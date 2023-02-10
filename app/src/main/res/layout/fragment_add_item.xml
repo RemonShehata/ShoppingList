@@ -6,7 +6,7 @@
     android:layout_height="match_parent">
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/itemName"
+        android:id="@+id/itemNameTextInputLayout"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
@@ -18,7 +18,7 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/itemName2"
+            android:id="@+id/itemName"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:hint="@string/item_name"
@@ -26,7 +26,7 @@
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/itemQuantity"
+        android:id="@+id/itemQuantityTextInputLayout"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
@@ -35,10 +35,10 @@
         android:minHeight="48dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/itemName">
+        app:layout_constraintTop_toBottomOf="@id/itemNameTextInputLayout">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/itemQuantity2"
+            android:id="@+id/itemQuantity"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:hint="@string/quantity"
@@ -48,7 +48,7 @@
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/editTextTextMultiLine"
+        android:id="@+id/itemDescTextInputLayout"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
@@ -57,7 +57,7 @@
         android:ems="10"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/itemQuantity">
+        app:layout_constraintTop_toBottomOf="@+id/itemQuantityTextInputLayout">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/itemDescription"
