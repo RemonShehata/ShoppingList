@@ -8,10 +8,13 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import com.example.shoppinglist.data.ErrorType
 import com.example.shoppinglist.data.State
 import com.example.shoppinglist.data.local.models.ShoppingItemEntity
 import com.example.shoppinglist.databinding.FragmentAddItemBinding
+import com.example.shoppinglist.utils.invisible
 import com.example.shoppinglist.utils.showToast
+import com.example.shoppinglist.utils.visible
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -56,10 +59,18 @@ class AddItemFragment : Fragment() {
 
     private fun onAdditionCompleted(state: State<Int>) {
         when (state) {
-            is State.Error -> TODO()
-            State.Loading -> TODO()
+            is State.Error -> {
+                binding.progressBar.invisible()
+                when(state.errorType){
+                    ErrorType.DuplicateItem -> showToast("Item already exist, you can modify it")
+                }
+            }
+
+            State.Loading -> binding.progressBar.visible()
+
             is State.Success -> {
                 with(binding){
+                    progressBar.invisible()
                     itemName.text?.clear()
                     itemQuantity.text?.clear()
                     itemDescription.text?.clear()
