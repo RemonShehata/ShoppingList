@@ -13,7 +13,7 @@ import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-class DatabaseModule {
+object DatabaseModule {
 
     @Singleton
     @Provides
@@ -30,7 +30,6 @@ class DatabaseModule {
         return moviesDatabase.shoppingListDao()
     }
 
-    companion object {
-        private const val MOVIES_DATABASE_NAME = "shopping_list.db"
-    }
+    private const val MOVIES_DATABASE_NAME = "shopping_list.db"
+
 }
