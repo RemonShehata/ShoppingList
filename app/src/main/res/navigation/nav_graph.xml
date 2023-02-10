@@ -6,7 +6,7 @@
 
     <fragment
         android:id="@+id/shoppingListFragment"
-        android:name="com.example.shoppinglist.ShoppingListFragment"
+        android:name="com.example.shoppinglist.features.shoppinglist.ShoppingListFragment"
         android:label="ShoppingListFragment" >
         <action
             android:id="@+id/action_shoppingListFragment_to_addItemFragment"
@@ -14,6 +14,6 @@
     </fragment>
     <fragment
         android:id="@+id/addItemFragment"
-        android:name="com.example.shoppinglist.AddItemFragment"
+        android:name="com.example.shoppinglist.features.additem.AddItemFragment"
         android:label="AddItemFragment" />
 </navigation>

@@ -1,4 +1,4 @@
-package com.example.shoppinglist
+package com.example.shoppinglist.features.shoppinglist
 
 import android.os.Bundle
 import android.view.LayoutInflater

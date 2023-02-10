@@ -2,8 +2,8 @@ package com.example.shoppinglist.di
 
 import android.content.Context
 import androidx.room.Room
-import com.example.shoppinglist.db.ShoppingListDao
-import com.example.shoppinglist.db.ShoppingListDatabase
+import com.example.shoppinglist.data.local.ShoppingListDao
+import com.example.shoppinglist.data.local.ShoppingListDatabase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
