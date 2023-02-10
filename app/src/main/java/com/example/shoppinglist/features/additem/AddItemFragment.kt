@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.example.shoppinglist.databinding.FragmentAddItemBinding
 import com.example.shoppinglist.data.local.models.ShoppingItemEntity
@@ -17,8 +18,7 @@ class AddItemFragment : Fragment() {
 
     private lateinit var binding: FragmentAddItemBinding
 
-    @Inject
-    lateinit var shoppingListDao: ShoppingListDao
+    private val addItemViewModel: AddItemViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -33,7 +33,8 @@ class AddItemFragment : Fragment() {
                     quantity = binding.itemQuantity.text.toString().toInt(),
                     description = binding.itemDescription.text.toString()
                 )
-//                shoppingListDao.insertShoppingItem(shoppingItemEntity)
+
+                addItemViewModel.saveShoppingItem(shoppingItemEntity)
             }
 
             cancelButton.setOnClickListener {
