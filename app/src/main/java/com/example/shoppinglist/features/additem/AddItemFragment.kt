@@ -1,17 +1,18 @@
 package com.example.shoppinglist.features.additem
 
 import android.os.Bundle
+import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
-import com.example.shoppinglist.databinding.FragmentAddItemBinding
+import com.example.shoppinglist.data.State
 import com.example.shoppinglist.data.local.models.ShoppingItemEntity
-import com.example.shoppinglist.data.local.ShoppingListDao
+import com.example.shoppinglist.databinding.FragmentAddItemBinding
+import com.example.shoppinglist.utils.showToast
 import dagger.hilt.android.AndroidEntryPoint
-import javax.inject.Inject
 
 @AndroidEntryPoint
 class AddItemFragment : Fragment() {
@@ -47,5 +48,24 @@ class AddItemFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        with(addItemViewModel) {
+            addResultLiveData.observe(viewLifecycleOwner, ::onAdditionCompleted)
+        }
+    }
+
+    private fun onAdditionCompleted(state: State<Int>) {
+        when (state) {
+            is State.Error -> TODO()
+            State.Loading -> TODO()
+            is State.Success -> {
+                with(binding){
+                    itemName.text?.clear()
+                    itemQuantity.text?.clear()
+                    itemDescription.text?.clear()
+                    showToast("Added item successfully")
+                }
+            }
+        }
     }
 }
