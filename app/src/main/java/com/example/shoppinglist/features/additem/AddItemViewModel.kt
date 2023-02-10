@@ -22,6 +22,7 @@ class AddItemViewModel @Inject constructor(private val repo: ShoppingListRepo) :
 
     @Suppress("SwallowedException")
     fun saveShoppingItem(shoppingItemEntity: ShoppingItemEntity) {
+        addResultMutableLiveData.value = State.Loading
         viewModelScope.launch {
             try {
                 repo.saveShoppingItem(shoppingItemEntity)
