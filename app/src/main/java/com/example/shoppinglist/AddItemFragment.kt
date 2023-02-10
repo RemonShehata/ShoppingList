@@ -30,8 +30,8 @@ class AddItemFragment : Fragment() {
 
             saveButton.setOnClickListener {
                 val shoppingItemEntity = ShoppingItemEntity(
-                    name = binding.itemName2.text.toString(),
-                    quantity = binding.itemQuantity2.text.toString().toInt(),
+                    name = binding.itemName.text.toString(),
+                    quantity = binding.itemQuantity.text.toString().toInt(),
                     description = binding.itemDescription.text.toString()
                 )
 //                shoppingListDao.insertShoppingItem(shoppingItemEntity)
