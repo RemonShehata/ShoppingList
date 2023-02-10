@@ -7,5 +7,13 @@
     <fragment
         android:id="@+id/shoppingListFragment"
         android:name="com.example.shoppinglist.ShoppingListFragment"
-        android:label="ShoppingListFragment" />
+        android:label="ShoppingListFragment" >
+        <action
+            android:id="@+id/action_shoppingListFragment_to_addItemFragment"
+            app:destination="@id/addItemFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/addItemFragment"
+        android:name="com.example.shoppinglist.AddItemFragment"
+        android:label="AddItemFragment" />
 </navigation>
