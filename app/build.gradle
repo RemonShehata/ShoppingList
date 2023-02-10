@@ -67,6 +67,13 @@ dependencies {
     implementation "com.google.dagger:hilt-android:$hilt_version"
     kapt "com.google.dagger:hilt-compiler:$hilt_version"
 
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutine_version"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutine_version"
+
+    implementation "androidx.lifecycle:lifecycle-livedata-ktx:$lifecycle_extensions_version"
+    implementation "androidx.lifecycle:lifecycle-process:$lifecycle_extensions_version"
+    implementation "androidx.lifecycle:lifecycle-runtime-ktx:$lifecycle_extensions_version"
+
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
