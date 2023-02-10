@@ -9,7 +9,7 @@ import com.example.shoppinglist.data.local.models.ShoppingItemEntity
 @Dao
 interface ShoppingListDao {
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert(onConflict = OnConflictStrategy.ABORT)
     suspend fun insertShoppingItem(shoppingItemEntity: ShoppingItemEntity): Long
 
     @Query("SELECT * FROM ShoppingItemEntity")
