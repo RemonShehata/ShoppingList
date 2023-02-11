@@ -2,13 +2,15 @@ package com.example.shoppinglist.features.shoppinglist
 
 import android.os.Bundle
 import android.util.Log
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
+import androidx.core.view.MenuHost
+import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.shoppinglist.R
 import com.example.shoppinglist.data.QueryError
 import com.example.shoppinglist.data.State
 import com.example.shoppinglist.data.local.models.ShoppingEntity
@@ -16,7 +18,7 @@ import com.example.shoppinglist.databinding.FragmentShoppingListBinding
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class ShoppingListFragment : Fragment() {
+class ShoppingListFragment : Fragment(), MenuProvider {
 
     private lateinit var binding: FragmentShoppingListBinding
 
@@ -39,7 +41,8 @@ class ShoppingListFragment : Fragment() {
         }
 
         shoppingListViewModel.getShoppingListItemsUpdates()
-
+        val menuHost: MenuHost = requireActivity()
+        menuHost.addMenuProvider(this, viewLifecycleOwner, Lifecycle.State.RESUMED)
         return binding.root
     }
 
@@ -87,4 +90,25 @@ class ShoppingListFragment : Fragment() {
         { name, isChecked ->
             shoppingListViewModel.changeBoughtStatus(name, isChecked)
         }
+
+
+    override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+        menuInflater.inflate(R.menu.menu, menu)
+    }
+
+    override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
+        return when(menuItem.itemId){
+            R.id.filterMenuButton -> {
+                Log.d("Remon", "onMenuItemSelected: filterMenuButton")
+                true
+            }
+
+            R.id.SortMenuButton -> {
+                Log.d("Remon", "onMenuItemSelected: SortMenuButton")
+                true
+            }
+
+            else -> false
+        }
+    }
 }
