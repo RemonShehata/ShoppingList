@@ -4,6 +4,7 @@ import android.database.sqlite.SQLiteConstraintException
 import com.example.shoppinglist.data.local.DuplicateItemException
 import com.example.shoppinglist.data.local.ShoppingListDao
 import com.example.shoppinglist.data.local.models.ShoppingItemEntity
+import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 @Suppress("SwallowedException")
@@ -19,5 +20,9 @@ class ShoppingListRepository @Inject constructor(private val shoppingListDao: Sh
 
     override suspend fun getShoppingList(): List<ShoppingItemEntity> {
         return shoppingListDao.getShoppingListItemsSync()
+    }
+
+    override fun getShoppingListFlow(): Flow<List<ShoppingItemEntity>> {
+        return shoppingListDao.getShoppingListItemsFlow()
     }
 }
