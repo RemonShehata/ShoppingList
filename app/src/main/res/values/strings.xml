@@ -8,4 +8,6 @@
     <string name="filter">Filter</string>
     <string name="bought">Bought</string>
     <string name="not_bought">Not bought</string>
+    <string name="asc">Asc</string>
+    <string name="dsc">Dsc</string>
 </resources>
