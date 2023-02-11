@@ -4,18 +4,21 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import com.example.shoppinglist.data.local.models.ShoppingItemEntity
+import com.example.shoppinglist.data.local.models.ShoppingEntity
 import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface ShoppingListDao {
 
     @Insert(onConflict = OnConflictStrategy.ABORT)
-    suspend fun insertShoppingItem(shoppingItemEntity: ShoppingItemEntity): Long
+    suspend fun insertShoppingItem(shoppingEntity: ShoppingEntity): Long
 
-    @Query("SELECT * FROM ShoppingItemEntity")
-    suspend fun getShoppingListItemsSync(): List<ShoppingItemEntity>
+    @Query("SELECT * FROM shopping_entity")
+    suspend fun getShoppingListItemsSync(): List<ShoppingEntity>
 
-    @Query("SELECT * FROM ShoppingItemEntity")
-     fun getShoppingListItemsFlow(): Flow<List<ShoppingItemEntity>>
+    @Query("SELECT * FROM shopping_entity")
+     fun getShoppingListItemsFlow(): Flow<List<ShoppingEntity>>
+
+    @Query("UPDATE shopping_entity SET is_bought = :isBought WHERE name = :itemName")
+     suspend fun updateBoughtStatus(itemName: String, isBought: Boolean): Int
 }
