@@ -39,14 +39,14 @@ class ShoppingListAdapter(
                 onItemClicked(currentItem)
             }
 
-            isBoughtCheckBox.setOnCheckedChangeListener { buttonView, isChecked ->
+            itemName.setOnCheckedChangeListener { buttonView, isChecked ->
                 Log.d("Remon", "setOnCheckedChangeListener: $isChecked")
                 onCheckStateChanged(currentItem.name, isChecked)
             }
 
             itemName.text = currentItem.name
             itemQuantity.text = currentItem.quantity.toString()
-            isBoughtCheckBox.isChecked = currentItem.isBought
+            itemName.isChecked = currentItem.isBought
         }
 
     }
