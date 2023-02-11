@@ -3,16 +3,19 @@ package com.example.shoppinglist.features.shoppinglist
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.recyclerview.widget.AsyncListDiffer
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.shoppinglist.data.local.models.ShoppingItemEntity
 import com.example.shoppinglist.databinding.ShoppingItemBinding
 
-// Diff utils doesn't work with adding new data, it move the scroll position to the top.
 class ShoppingListAdapter(
-    private val onItemClicked: (item: ShoppingItemEntity) -> Unit,
-    private var list: List<ShoppingItemEntity>
+    private val onItemClicked: (item: ShoppingItemEntity) -> Unit
 ) :
     RecyclerView.Adapter<ShoppingListAdapter.ShoppingListViewHolder>() {
+
+    private val differ: AsyncListDiffer<ShoppingItemEntity> =
+        AsyncListDiffer(this, DIFF_CALLBACK)
 
     private lateinit var context: Context
 
@@ -27,7 +30,7 @@ class ShoppingListAdapter(
     }
 
     override fun onBindViewHolder(holder: ShoppingListViewHolder, position: Int) {
-        val currentItem = list[position]
+        val currentItem = differ.currentList[position]
 
         with(holder.binding) {
             root.setOnClickListener {
@@ -40,13 +43,24 @@ class ShoppingListAdapter(
 
     }
 
-    override fun getItemCount(): Int = list.size
+    override fun getItemCount(): Int = differ.currentList.count()
 
-    fun setItems(newList: List<ShoppingItemEntity>) {
-        val oldSize = list.size
-        this.list = newList
-//        notifyItemRangeChanged(oldSize, newList.size)
-        notifyDataSetChanged()
+    fun submitList(readings: List<ShoppingItemEntity>) {
+        differ.submitList(readings)
+    }
+
+    companion object {
+        val DIFF_CALLBACK = object : DiffUtil.ItemCallback<ShoppingItemEntity>() {
+            override fun areItemsTheSame(
+                oldItem: ShoppingItemEntity,
+                newItem: ShoppingItemEntity
+            ): Boolean = oldItem.name == newItem.name
+
+            override fun areContentsTheSame(
+                oldItem: ShoppingItemEntity,
+                newItem: ShoppingItemEntity
+            ): Boolean = oldItem == newItem
+        }
     }
 
     override fun onAttachedToRecyclerView(recyclerView: RecyclerView) {
