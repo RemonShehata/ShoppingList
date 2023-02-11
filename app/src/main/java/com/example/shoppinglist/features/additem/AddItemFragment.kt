@@ -1,16 +1,16 @@
 package com.example.shoppinglist.features.additem
 
 import android.os.Bundle
-import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
-import com.example.shoppinglist.data.ErrorType
+import com.example.shoppinglist.data.UpdateError
+import com.example.shoppinglist.data.InsertionError
 import com.example.shoppinglist.data.State
-import com.example.shoppinglist.data.local.models.ShoppingItemEntity
+import com.example.shoppinglist.data.local.models.ShoppingEntity
 import com.example.shoppinglist.databinding.FragmentAddItemBinding
 import com.example.shoppinglist.utils.invisible
 import com.example.shoppinglist.utils.showToast
@@ -32,13 +32,14 @@ class AddItemFragment : Fragment() {
         binding = FragmentAddItemBinding.inflate(layoutInflater).apply {
 
             saveButton.setOnClickListener {
-                val shoppingItemEntity = ShoppingItemEntity(
+                val shoppingEntity = ShoppingEntity(
                     name = binding.itemName.text.toString(),
                     quantity = binding.itemQuantity.text.toString().toInt(),
-                    description = binding.itemDescription.text.toString()
+                    description = binding.itemDescription.text.toString(),
+                    isBought = false // not bought when first added.
                 )
 
-                addItemViewModel.saveShoppingItem(shoppingItemEntity)
+                addItemViewModel.saveShoppingItem(shoppingEntity)
             }
 
             cancelButton.setOnClickListener {
@@ -57,12 +58,12 @@ class AddItemFragment : Fragment() {
         }
     }
 
-    private fun onAdditionCompleted(state: State<Int>) {
+    private fun onAdditionCompleted(state: State<Nothing?, InsertionError>) {
         when (state) {
             is State.Error -> {
                 binding.progressBar.invisible()
                 when(state.errorType){
-                    ErrorType.DuplicateItem -> showToast("Item already exist, you can modify it")
+                    InsertionError.DuplicateItem -> showToast("Item already exist, you can modify it")
                 }
             }
 

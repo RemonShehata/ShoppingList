@@ -5,14 +5,13 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.LinearLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.shoppinglist.data.QueryError
 import com.example.shoppinglist.data.State
-import com.example.shoppinglist.data.local.models.ShoppingItemEntity
+import com.example.shoppinglist.data.local.models.ShoppingEntity
 import com.example.shoppinglist.databinding.FragmentShoppingListBinding
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -47,7 +46,7 @@ class ShoppingListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        shoppingListAdapter = ShoppingListAdapter(onItemClicked)
+        shoppingListAdapter = ShoppingListAdapter(onItemClicked, onCheckStateChanged)
         binding.shoppingListRecyclerView.apply {
             layoutManager = LinearLayoutManager(requireContext())
             adapter = shoppingListAdapter
@@ -55,17 +54,19 @@ class ShoppingListFragment : Fragment() {
         }
 
 
-        with(shoppingListViewModel){
+        with(shoppingListViewModel) {
             shoppingListLiveData.observe(viewLifecycleOwner, ::renderShoppingList)
         }
     }
 
-    private fun renderShoppingList(state: State<List<ShoppingItemEntity>>){
-        when(state){
+    private fun renderShoppingList(state: State<List<ShoppingEntity>, QueryError>) {
+        when (state) {
             is State.Error -> TODO()
+
             State.Loading -> {
 
             }
+
             is State.Success -> {
                 Log.d("Remon", "renderShoppingList: items: ${state.data}")
                 shoppingListAdapter.submitList(state.data)
@@ -74,11 +75,16 @@ class ShoppingListFragment : Fragment() {
     }
 
 
-    private val onItemClicked: (shoppingItemEntity: ShoppingItemEntity) -> Unit = { item ->
+    private val onItemClicked: (shoppingEntity: ShoppingEntity) -> Unit = { item ->
 //        findNavController().navigate(
 //            TrendingMoviesFragmentDirections.actionMoviesListFragmentToMovieDetailsFragment(
 //                movieId
 //            )
 //        )
     }
+
+    private val onCheckStateChanged: (itemName: String, isChecked: Boolean) -> Unit =
+        { name, isChecked ->
+            shoppingListViewModel.changeBoughtStatus(name, isChecked)
+        }
 }
