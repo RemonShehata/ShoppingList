@@ -11,6 +11,7 @@ import com.example.shoppinglist.data.State
 import com.example.shoppinglist.data.local.models.ShoppingEntity
 import com.example.shoppinglist.data.repos.ShoppingListRepo
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -27,9 +28,43 @@ class ShoppingListViewModel @Inject constructor(private val repo: ShoppingListRe
     val itemUpdateLiveData: LiveData<State<Nothing?, UpdateError>> =
         itemUpdateMutableLiveData
 
+    private var notBoughtJob: Job? = null
+    private var boughtJob: Job? = null
+    private var shoppingListJob: Job? = null
+
     fun getShoppingListItemsUpdates() {
         shoppingListMutableLiveData.value = State.Loading
-        viewModelScope.launch {
+
+        notBoughtJob?.cancel()
+        boughtJob?.cancel()
+
+        shoppingListJob = viewModelScope.launch {
+            repo.getShoppingListFlow().collect {
+                shoppingListMutableLiveData.value = State.Success(it)
+            }
+        }
+    }
+
+    fun getShoppingListBoughtItemsUpdates(){
+        shoppingListMutableLiveData.value = State.Loading
+
+        notBoughtJob?.cancel()
+        shoppingListJob?.cancel()
+
+        boughtJob = viewModelScope.launch {
+            repo.getShoppingListBoughtItemsFlow().collect {
+                shoppingListMutableLiveData.value = State.Success(it)
+            }
+        }
+    }
+
+    fun getShoppingListNotBoughtItemsUpdates(){
+        shoppingListMutableLiveData.value = State.Loading
+
+        boughtJob?.cancel()
+        shoppingListJob?.cancel()
+
+        notBoughtJob = viewModelScope.launch {
             repo.getShoppingListNotBoughtItemsFlow().collect {
                 shoppingListMutableLiveData.value = State.Success(it)
             }

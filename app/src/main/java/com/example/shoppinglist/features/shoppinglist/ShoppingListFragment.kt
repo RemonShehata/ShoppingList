@@ -38,6 +38,22 @@ class ShoppingListFragment : Fragment(), MenuProvider {
                         ShoppingListFragmentDirections.actionShoppingListFragmentToAddItemFragment()
                     )
             }
+
+            chipGroup.setOnCheckedStateChangeListener { group, checkedIds ->
+                when (checkedIds) {
+                    listOf(R.id.boughtChip) -> {
+                        shoppingListViewModel.getShoppingListBoughtItemsUpdates()
+                    }
+
+                    listOf(R.id.notBoughtChip) -> {
+                        shoppingListViewModel.getShoppingListNotBoughtItemsUpdates()
+                    }
+
+                    listOf(R.id.boughtChip, R.id.notBoughtChip), emptyList<Int>() -> {
+                        shoppingListViewModel.getShoppingListItemsUpdates()
+                    }
+                }
+            }
         }
 
         shoppingListViewModel.getShoppingListItemsUpdates()
@@ -97,7 +113,7 @@ class ShoppingListFragment : Fragment(), MenuProvider {
     }
 
     override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
-        return when(menuItem.itemId){
+        return when (menuItem.itemId) {
             R.id.filterMenuButton -> {
                 Log.d("Remon", "onMenuItemSelected: filterMenuButton")
                 true
