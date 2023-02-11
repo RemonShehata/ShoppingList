@@ -24,6 +24,10 @@ class ShoppingListRepository @Inject constructor(private val shoppingListDao: Sh
 
     override fun getShoppingListFlow(): Flow<List<ShoppingEntity>> {
         return shoppingListDao.getShoppingListItemsFlow()
+
+    }
+    override fun getShoppingListNotBoughtItemsFlow(): Flow<List<ShoppingEntity>> {
+        return shoppingListDao.getShoppingListNotBoughtItemsFlow()
     }
 
     override suspend fun updateBoughtStatus(itemName: String,isBought: Boolean): Int {

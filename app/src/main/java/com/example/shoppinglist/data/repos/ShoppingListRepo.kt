@@ -8,5 +8,7 @@ interface ShoppingListRepo {
     suspend fun getShoppingList(): List<ShoppingEntity>
     fun getShoppingListFlow(): Flow<List<ShoppingEntity>>
 
+    fun getShoppingListNotBoughtItemsFlow(): Flow<List<ShoppingEntity>>
+
     suspend fun updateBoughtStatus(itemName: String, isBought: Boolean): Int
 }

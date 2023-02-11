@@ -30,7 +30,7 @@ class ShoppingListViewModel @Inject constructor(private val repo: ShoppingListRe
     fun getShoppingListItemsUpdates() {
         shoppingListMutableLiveData.value = State.Loading
         viewModelScope.launch {
-            repo.getShoppingListFlow().collect {
+            repo.getShoppingListNotBoughtItemsFlow().collect {
                 shoppingListMutableLiveData.value = State.Success(it)
             }
         }
