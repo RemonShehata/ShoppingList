@@ -40,19 +40,7 @@ class ShoppingListFragment : Fragment(), MenuProvider {
             }
 
             chipGroup.setOnCheckedStateChangeListener { group, checkedIds ->
-                when (checkedIds) {
-                    listOf(R.id.boughtChip) -> {
-                        shoppingListViewModel.getShoppingListBoughtItemsUpdates()
-                    }
-
-                    listOf(R.id.notBoughtChip) -> {
-                        shoppingListViewModel.getShoppingListNotBoughtItemsUpdates()
-                    }
-
-                    listOf(R.id.boughtChip, R.id.notBoughtChip), emptyList<Int>() -> {
-                        shoppingListViewModel.getShoppingListItemsUpdates()
-                    }
-                }
+                onChipCheckedStateChanged(checkedIds)
             }
         }
 
@@ -60,6 +48,22 @@ class ShoppingListFragment : Fragment(), MenuProvider {
         val menuHost: MenuHost = requireActivity()
         menuHost.addMenuProvider(this, viewLifecycleOwner, Lifecycle.State.RESUMED)
         return binding.root
+    }
+
+    private fun onChipCheckedStateChanged(checkedIds: List<Int>) {
+        when (checkedIds) {
+            listOf(R.id.boughtChip) -> {
+                shoppingListViewModel.getShoppingListBoughtItemsUpdates()
+            }
+
+            listOf(R.id.notBoughtChip) -> {
+                shoppingListViewModel.getShoppingListNotBoughtItemsUpdates()
+            }
+
+            listOf(R.id.boughtChip, R.id.notBoughtChip), emptyList<Int>() -> {
+                shoppingListViewModel.getShoppingListItemsUpdates()
+            }
+        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
