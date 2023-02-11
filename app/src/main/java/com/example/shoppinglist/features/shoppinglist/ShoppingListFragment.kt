@@ -47,11 +47,11 @@ class ShoppingListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        shoppingListAdapter = ShoppingListAdapter(onItemClicked, emptyList())
+        shoppingListAdapter = ShoppingListAdapter(onItemClicked)
         binding.shoppingListRecyclerView.apply {
             layoutManager = LinearLayoutManager(requireContext())
             adapter = shoppingListAdapter
-            addItemDecoration(DividerItemDecoration(requireContext(), LinearLayout.HORIZONTAL))
+//            addItemDecoration(DividerItemDecoration(requireContext(), LinearLayout.HORIZONTAL))
         }
 
 
@@ -68,7 +68,7 @@ class ShoppingListFragment : Fragment() {
             }
             is State.Success -> {
                 Log.d("Remon", "renderShoppingList: items: ${state.data}")
-                shoppingListAdapter.setItems(state.data)
+                shoppingListAdapter.submitList(state.data)
             }
         }
     }
