@@ -1,9 +1,12 @@
 package com.example.shoppinglist.data.local
 
+import android.util.Log
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import com.example.shoppinglist.data.BoughtFilter
+import com.example.shoppinglist.data.FilterPreferences
 import com.example.shoppinglist.data.local.models.ShoppingEntity
 import kotlinx.coroutines.flow.Flow
 
@@ -27,4 +30,12 @@ interface ShoppingListDao {
 
     @Query("UPDATE shopping_entity SET is_bought = :isBought WHERE name = :itemName")
      suspend fun updateBoughtStatus(itemName: String, isBought: Boolean): Int
+    fun getShoppingListFlowWithFilter(filterPreferences: FilterPreferences): Flow<List<ShoppingEntity>> {
+        Log.d("Remon", "getShoppingListFlowWithFilter: $filterPreferences")
+        return when(filterPreferences.boughtFilter){
+            BoughtFilter.BOUGHT -> getShoppingListBoughtItemsFlow()
+            BoughtFilter.NOT_BOUGHT -> getShoppingListNotBoughtItemsFlow()
+            BoughtFilter.BOTH -> getShoppingListItemsFlow()
+        }
+    }
 }
