@@ -47,6 +47,10 @@ class ShoppingListFragment : Fragment(), MenuProvider {
             chipGroup.setOnCheckedStateChangeListener { group, checkedIds ->
                 onChipCheckedStateChanged(checkedIds)
             }
+
+            sortChipGroup.setOnCheckedStateChangeListener { group, checkedIds ->
+                onSortChipCheckStateChanged(checkedIds)
+            }
         }
 
         shoppingListViewModel.getShoppingListItemsUpdates()
@@ -55,14 +59,32 @@ class ShoppingListFragment : Fragment(), MenuProvider {
         return binding.root
     }
 
+    private fun onSortChipCheckStateChanged(checkedIds: List<Int>) {
+        val sort: SortOrder = when (checkedIds) { // single select only is allowed
+            listOf(R.id.ascChip) -> SortOrder.ASC
+            listOf(R.id.dscChip) -> SortOrder.DESC
+            else -> SortOrder.ASC
+        }
+
+        shoppingListViewModel.onSortOrderSelected(sort)
+    }
+
     private fun onChipCheckedStateChanged(checkedIds: List<Int>) {
-        val filter:BoughtFilter = when (checkedIds) {
-            listOf(R.id.boughtChip) -> { BoughtFilter.BOUGHT }
+        val filter: BoughtFilter = when (checkedIds) {
+            listOf(R.id.boughtChip) -> {
+                BoughtFilter.BOUGHT
+            }
 
-            listOf(R.id.notBoughtChip) -> { BoughtFilter.NOT_BOUGHT }
+            listOf(R.id.notBoughtChip) -> {
+                BoughtFilter.NOT_BOUGHT
+            }
 
-            listOf(R.id.boughtChip, R.id.notBoughtChip), emptyList<Int>() -> {BoughtFilter.BOTH}
-            else -> {BoughtFilter.BOTH}
+            listOf(R.id.boughtChip, R.id.notBoughtChip), emptyList<Int>() -> {
+                BoughtFilter.BOTH
+            }
+            else -> {
+                BoughtFilter.BOTH
+            }
         }
 
         Log.d("Remon", "onChipCheckedStateChanged: ${filter.name}")
@@ -85,13 +107,13 @@ class ShoppingListFragment : Fragment(), MenuProvider {
             shoppingListLiveData.observe(viewLifecycleOwner, ::renderShoppingList)
             lifecycleScope.launch {
                 val initValue = shoppingListViewModel.preferencesFlow.first()
-                when(initValue.boughtFilter){
+                when (initValue.boughtFilter) {
                     BoughtFilter.BOUGHT -> binding.boughtChip.isChecked = true
                     BoughtFilter.NOT_BOUGHT -> binding.notBoughtChip.isChecked = true
                     BoughtFilter.BOTH -> {}
                 }
 
-                when(initValue.sortOrder){
+                when (initValue.sortOrder) {
                     SortOrder.ASC -> {}
                     SortOrder.DESC -> {}
                 }
