@@ -30,9 +30,9 @@ interface ShoppingListDao {
 
     @Query("UPDATE shopping_entity SET is_bought = :isBought WHERE name = :itemName")
      suspend fun updateBoughtStatus(itemName: String, isBought: Boolean): Int
-    fun getShoppingListFlowWithFilter(filterPreferences: FilterPreferences): Flow<List<ShoppingEntity>> {
-        Log.d("Remon", "getShoppingListFlowWithFilter: $filterPreferences")
-        return when(filterPreferences.boughtFilter){
+    fun getShoppingListFlowWithFilter(boughtFilter: BoughtFilter): Flow<List<ShoppingEntity>> {
+        Log.d("Remon", "getShoppingListFlowWithFilter: ${boughtFilter.name}")
+        return when(boughtFilter){
             BoughtFilter.BOUGHT -> getShoppingListBoughtItemsFlow()
             BoughtFilter.NOT_BOUGHT -> getShoppingListNotBoughtItemsFlow()
             BoughtFilter.BOTH -> getShoppingListItemsFlow()

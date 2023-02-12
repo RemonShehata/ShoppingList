@@ -1,13 +1,11 @@
 package com.example.shoppinglist.data.repos
 
 import android.database.sqlite.SQLiteConstraintException
-import com.example.shoppinglist.data.FilterPreferences
-import com.example.shoppinglist.data.SortOrder
+import com.example.shoppinglist.data.BoughtFilter
 import com.example.shoppinglist.data.local.DuplicateItemException
 import com.example.shoppinglist.data.local.ShoppingListDao
 import com.example.shoppinglist.data.local.models.ShoppingEntity
 import kotlinx.coroutines.flow.Flow
-import java.util.Collections
 import javax.inject.Inject
 
 @Suppress("SwallowedException")
@@ -38,7 +36,7 @@ class ShoppingListRepository @Inject constructor(private val shoppingListDao: Sh
         return shoppingListDao.getShoppingListBoughtItemsFlow()
     }
 
-    override fun getShoppingListFlowWithFilter(filterPreferences: FilterPreferences): Flow<List<ShoppingEntity>> {
+    override fun getShoppingListFlowWithFilter(filterPreferences: BoughtFilter): Flow<List<ShoppingEntity>> {
         return shoppingListDao.getShoppingListFlowWithFilter(filterPreferences)
     }
 
