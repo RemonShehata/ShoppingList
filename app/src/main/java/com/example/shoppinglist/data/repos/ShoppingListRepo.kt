@@ -1,5 +1,6 @@
 package com.example.shoppinglist.data.repos
 
+import com.example.shoppinglist.data.FilterPreferences
 import com.example.shoppinglist.data.local.models.ShoppingEntity
 import kotlinx.coroutines.flow.Flow
 
@@ -11,6 +12,8 @@ interface ShoppingListRepo {
     fun getShoppingListNotBoughtItemsFlow(): Flow<List<ShoppingEntity>>
 
     fun getShoppingListBoughtItemsFlow(): Flow<List<ShoppingEntity>>
+
+    fun getShoppingListFlowWithFilter(filterPreferences: FilterPreferences): Flow<List<ShoppingEntity>>
 
     suspend fun updateBoughtStatus(itemName: String, isBought: Boolean): Int
 }
