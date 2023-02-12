@@ -36,7 +36,7 @@ class PreferencesManager @Inject constructor(@ApplicationContext private val con
         }
         .map { preferences ->
             val sortOrder = SortOrder.valueOf(
-                preferences[PreferencesKeys.SORT_ORDER] ?: SortOrder.DESC.name
+                preferences[PreferencesKeys.SORT_ORDER] ?: SortOrder.ASC.name
             )
 
             val boughtFilter =
