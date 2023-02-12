@@ -8,15 +8,19 @@ import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.shoppinglist.R
 import com.example.shoppinglist.data.BoughtFilter
 import com.example.shoppinglist.data.QueryError
+import com.example.shoppinglist.data.SortOrder
 import com.example.shoppinglist.data.State
 import com.example.shoppinglist.data.local.models.ShoppingEntity
 import com.example.shoppinglist.databinding.FragmentShoppingListBinding
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class ShoppingListFragment : Fragment(), MenuProvider {
@@ -79,6 +83,19 @@ class ShoppingListFragment : Fragment(), MenuProvider {
 
         with(shoppingListViewModel) {
             shoppingListLiveData.observe(viewLifecycleOwner, ::renderShoppingList)
+            lifecycleScope.launch {
+                val initValue = shoppingListViewModel.preferencesFlow.first()
+                when(initValue.boughtFilter){
+                    BoughtFilter.BOUGHT -> binding.boughtChip.isChecked = true
+                    BoughtFilter.NOT_BOUGHT -> binding.notBoughtChip.isChecked = true
+                    BoughtFilter.BOTH -> {}
+                }
+
+                when(initValue.sortOrder){
+                    SortOrder.ASC -> {}
+                    SortOrder.DESC -> {}
+                }
+            }
         }
     }
 
