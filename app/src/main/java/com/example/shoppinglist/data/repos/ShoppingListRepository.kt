@@ -1,10 +1,13 @@
 package com.example.shoppinglist.data.repos
 
 import android.database.sqlite.SQLiteConstraintException
+import com.example.shoppinglist.data.FilterPreferences
+import com.example.shoppinglist.data.SortOrder
 import com.example.shoppinglist.data.local.DuplicateItemException
 import com.example.shoppinglist.data.local.ShoppingListDao
 import com.example.shoppinglist.data.local.models.ShoppingEntity
 import kotlinx.coroutines.flow.Flow
+import java.util.Collections
 import javax.inject.Inject
 
 @Suppress("SwallowedException")
@@ -13,7 +16,7 @@ class ShoppingListRepository @Inject constructor(private val shoppingListDao: Sh
     override suspend fun saveShoppingItem(item: ShoppingEntity): Long {
         return try {
             shoppingListDao.insertShoppingItem(item)
-        } catch (ex: SQLiteConstraintException){
+        } catch (ex: SQLiteConstraintException) {
             throw DuplicateItemException("item ${item.name} already exists")
         }
     }
@@ -26,6 +29,7 @@ class ShoppingListRepository @Inject constructor(private val shoppingListDao: Sh
         return shoppingListDao.getShoppingListItemsFlow()
 
     }
+
     override fun getShoppingListNotBoughtItemsFlow(): Flow<List<ShoppingEntity>> {
         return shoppingListDao.getShoppingListNotBoughtItemsFlow()
     }
@@ -34,7 +38,11 @@ class ShoppingListRepository @Inject constructor(private val shoppingListDao: Sh
         return shoppingListDao.getShoppingListBoughtItemsFlow()
     }
 
-    override suspend fun updateBoughtStatus(itemName: String,isBought: Boolean): Int {
+    override fun getShoppingListFlowWithFilter(filterPreferences: FilterPreferences): Flow<List<ShoppingEntity>> {
+        return shoppingListDao.getShoppingListFlowWithFilter(filterPreferences)
+    }
+
+    override suspend fun updateBoughtStatus(itemName: String, isBought: Boolean): Int {
         return shoppingListDao.updateBoughtStatus(itemName, isBought)
     }
 }

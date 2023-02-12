@@ -11,6 +11,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.shoppinglist.R
+import com.example.shoppinglist.data.BoughtFilter
 import com.example.shoppinglist.data.QueryError
 import com.example.shoppinglist.data.State
 import com.example.shoppinglist.data.local.models.ShoppingEntity
@@ -51,19 +52,18 @@ class ShoppingListFragment : Fragment(), MenuProvider {
     }
 
     private fun onChipCheckedStateChanged(checkedIds: List<Int>) {
-        when (checkedIds) {
-            listOf(R.id.boughtChip) -> {
-                shoppingListViewModel.getShoppingListBoughtItemsUpdates()
-            }
+        val filter:BoughtFilter = when (checkedIds) {
+            listOf(R.id.boughtChip) -> { BoughtFilter.BOUGHT }
 
-            listOf(R.id.notBoughtChip) -> {
-                shoppingListViewModel.getShoppingListNotBoughtItemsUpdates()
-            }
+            listOf(R.id.notBoughtChip) -> { BoughtFilter.NOT_BOUGHT }
 
-            listOf(R.id.boughtChip, R.id.notBoughtChip), emptyList<Int>() -> {
-                shoppingListViewModel.getShoppingListItemsUpdates()
-            }
+            listOf(R.id.boughtChip, R.id.notBoughtChip), emptyList<Int>() -> {BoughtFilter.BOTH}
+            else -> {BoughtFilter.BOTH}
         }
+
+        Log.d("Remon", "onChipCheckedStateChanged: ${filter.name}")
+
+        shoppingListViewModel.onBoughtFilterChanged(filter)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

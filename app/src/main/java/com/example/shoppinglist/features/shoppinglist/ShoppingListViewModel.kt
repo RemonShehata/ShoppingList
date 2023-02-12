@@ -1,24 +1,27 @@
 package com.example.shoppinglist.features.shoppinglist
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.shoppinglist.data.InsertionError
-import com.example.shoppinglist.data.QueryError
-import com.example.shoppinglist.data.UpdateError
-import com.example.shoppinglist.data.State
+import com.example.shoppinglist.data.*
 import com.example.shoppinglist.data.local.models.ShoppingEntity
 import com.example.shoppinglist.data.repos.ShoppingListRepo
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class ShoppingListViewModel @Inject constructor(private val repo: ShoppingListRepo) : ViewModel() {
+class ShoppingListViewModel @Inject constructor(
+    private val repo: ShoppingListRepo,
+    private val preferencesManager: PreferencesManager
+) : ViewModel() {
 
-    private val shoppingListMutableLiveData = MutableLiveData<State<List<ShoppingEntity>, QueryError>>()
+    val preferencesFlow = preferencesManager.preferencesFlow
+
+    private val shoppingListMutableLiveData =
+        MutableLiveData<State<List<ShoppingEntity>, QueryError>>()
 
     val shoppingListLiveData: LiveData<State<List<ShoppingEntity>, QueryError>> =
         shoppingListMutableLiveData
@@ -28,45 +31,29 @@ class ShoppingListViewModel @Inject constructor(private val repo: ShoppingListRe
     val itemUpdateLiveData: LiveData<State<Nothing?, UpdateError>> =
         itemUpdateMutableLiveData
 
-    private var notBoughtJob: Job? = null
-    private var boughtJob: Job? = null
-    private var shoppingListJob: Job? = null
 
     fun getShoppingListItemsUpdates() {
         shoppingListMutableLiveData.value = State.Loading
 
-        notBoughtJob?.cancel()
-        boughtJob?.cancel()
 
-        shoppingListJob = viewModelScope.launch {
-            repo.getShoppingListFlow().collect {
-                shoppingListMutableLiveData.value = State.Success(it)
-            }
-        }
-    }
+        viewModelScope.launch {
+            preferencesFlow.collect { filter ->
+                Log.d("Remon", "getShoppingListItemsUpdates: filter = $filter")
+                viewModelScope.launch {
+                    repo.getShoppingListFlowWithFilter(filter).collect { shoppingList ->
+                        Log.d("Remon", "getShoppingListItemsUpdates: list = $shoppingList")
+                        val sortedList = when (filter.sortOrder) {
+                            SortOrder.ASC -> shoppingList.sortedWith(compareBy { it.name })
+                            SortOrder.DESC -> shoppingList.sortedWith(compareByDescending { it.name })
+                        }
 
-    fun getShoppingListBoughtItemsUpdates(){
-        shoppingListMutableLiveData.value = State.Loading
+                        Log.d("Remon", "getShoppingListItemsUpdates: sortedList = $sortedList")
 
-        notBoughtJob?.cancel()
-        shoppingListJob?.cancel()
+                        shoppingListMutableLiveData.value = State.Success(sortedList)
 
-        boughtJob = viewModelScope.launch {
-            repo.getShoppingListBoughtItemsFlow().collect {
-                shoppingListMutableLiveData.value = State.Success(it)
-            }
-        }
-    }
+                    }
+                }
 
-    fun getShoppingListNotBoughtItemsUpdates(){
-        shoppingListMutableLiveData.value = State.Loading
-
-        boughtJob?.cancel()
-        shoppingListJob?.cancel()
-
-        notBoughtJob = viewModelScope.launch {
-            repo.getShoppingListNotBoughtItemsFlow().collect {
-                shoppingListMutableLiveData.value = State.Success(it)
             }
         }
     }
@@ -81,5 +68,13 @@ class ShoppingListViewModel @Inject constructor(private val repo: ShoppingListRe
 
             itemUpdateMutableLiveData.postValue(valueToPost)
         }
+    }
+
+    fun onSortOrderSelected(sortOrder: SortOrder) = viewModelScope.launch {
+        preferencesManager.updateSortOrder(sortOrder)
+    }
+
+    fun onBoughtFilterChanged(boughtFilter: BoughtFilter) = viewModelScope.launch {
+        preferencesManager.updateHideBought(boughtFilter)
     }
 }
