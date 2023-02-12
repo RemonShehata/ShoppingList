@@ -14,9 +14,9 @@ import javax.inject.Singleton
 
 private const val TAG = "PreferencesManager"
 
-enum class SortOrder { BY_NAME, BY_DATE }
+enum class SortOrder { ASC, DESC }
 
-data class FilterPreferences(val sortOrder: SortOrder, val hideCompleted: Boolean)
+data class FilterPreferences(val sortOrder: SortOrder, val hideBought: Boolean)
 
 @Singleton
 class PreferencesManager @Inject constructor(@ApplicationContext private val context: Context) {
@@ -35,10 +35,10 @@ class PreferencesManager @Inject constructor(@ApplicationContext private val con
         }
         .map { preferences ->
             val sortOrder = SortOrder.valueOf(
-                preferences[PreferencesKeys.SORT_ORDER] ?: SortOrder.BY_DATE.name
+                preferences[PreferencesKeys.SORT_ORDER] ?: SortOrder.DESC.name
             )
-            val hideCompleted = preferences[PreferencesKeys.HIDE_COMPLETED] ?: false
-            FilterPreferences(sortOrder, hideCompleted)
+            val hideBought = preferences[PreferencesKeys.HIDE_BOUGHT] ?: false
+            FilterPreferences(sortOrder, hideBought)
         }
 
     suspend fun updateSortOrder(sortOrder: SortOrder) {
@@ -47,19 +47,15 @@ class PreferencesManager @Inject constructor(@ApplicationContext private val con
         }
     }
 
-    suspend fun updateHideCompleted(hideCompleted: Boolean) {
+    suspend fun updateHideBought(hideCompleted: Boolean) {
         context.dataStore.edit { preferences ->
-            preferences[PreferencesKeys.HIDE_COMPLETED] = hideCompleted
+            preferences[PreferencesKeys.HIDE_BOUGHT] = hideCompleted
         }
     }
 
 
     private object PreferencesKeys {
         val SORT_ORDER = stringPreferencesKey("sort_order")
-        val HIDE_COMPLETED = booleanPreferencesKey("hide_completed")
+        val HIDE_BOUGHT = booleanPreferencesKey("hide_bought")
     }
-}
-
-fun main() {
-    println(SortOrder.BY_DATE.name)
 }
