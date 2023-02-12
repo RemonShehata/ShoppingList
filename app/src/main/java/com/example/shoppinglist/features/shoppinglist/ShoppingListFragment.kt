@@ -59,39 +59,6 @@ class ShoppingListFragment : Fragment(), MenuProvider {
         return binding.root
     }
 
-    private fun onSortChipCheckStateChanged(checkedIds: List<Int>) {
-        val sort: SortOrder = when (checkedIds) { // single select only is allowed
-            listOf(R.id.ascChip) -> SortOrder.ASC
-            listOf(R.id.dscChip) -> SortOrder.DESC
-            else -> SortOrder.ASC
-        }
-
-        shoppingListViewModel.onSortOrderSelected(sort)
-    }
-
-    private fun onChipCheckedStateChanged(checkedIds: List<Int>) {
-        val filter: BoughtFilter = when (checkedIds) {
-            listOf(R.id.boughtChip) -> {
-                BoughtFilter.BOUGHT
-            }
-
-            listOf(R.id.notBoughtChip) -> {
-                BoughtFilter.NOT_BOUGHT
-            }
-
-            listOf(R.id.boughtChip, R.id.notBoughtChip), emptyList<Int>() -> {
-                BoughtFilter.BOTH
-            }
-            else -> {
-                BoughtFilter.BOTH
-            }
-        }
-
-        Log.d("Remon", "onChipCheckedStateChanged: ${filter.name}")
-
-        shoppingListViewModel.onBoughtFilterChanged(filter)
-    }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -99,7 +66,6 @@ class ShoppingListFragment : Fragment(), MenuProvider {
         binding.shoppingListRecyclerView.apply {
             layoutManager = LinearLayoutManager(requireContext())
             adapter = shoppingListAdapter
-//            addItemDecoration(DividerItemDecoration(requireContext(), LinearLayout.HORIZONTAL))
         }
 
 
@@ -110,15 +76,38 @@ class ShoppingListFragment : Fragment(), MenuProvider {
                 when (initValue.boughtFilter) {
                     BoughtFilter.BOUGHT -> binding.boughtChip.isChecked = true
                     BoughtFilter.NOT_BOUGHT -> binding.notBoughtChip.isChecked = true
-                    BoughtFilter.BOTH -> {}
+                    BoughtFilter.BOTH -> {
+                        binding.boughtChip.isChecked = true
+                        binding.notBoughtChip.isChecked = true
+                    }
                 }
 
                 when (initValue.sortOrder) {
-                    SortOrder.ASC -> {}
-                    SortOrder.DESC -> {}
+                    SortOrder.ASC -> binding.ascChip.isChecked = true
+                    SortOrder.DESC -> binding.dscChip.isChecked = true
                 }
             }
         }
+    }
+
+    private fun onSortChipCheckStateChanged(checkedIds: List<Int>) {
+        val sort: SortOrder = when (checkedIds) { // single select only is allowed
+            listOf(R.id.ascChip) -> SortOrder.ASC
+            listOf(R.id.dscChip) -> SortOrder.DESC
+            else -> SortOrder.ASC
+        }
+        shoppingListViewModel.onSortOrderSelected(sort)
+    }
+
+    private fun onChipCheckedStateChanged(checkedIds: List<Int>) {
+        val filter: BoughtFilter = when (checkedIds) {
+            listOf(R.id.boughtChip) -> BoughtFilter.BOUGHT
+            listOf(R.id.notBoughtChip) -> BoughtFilter.NOT_BOUGHT
+            // listOf(R.id.boughtChip, R.id.notBoughtChip), emptyList<Int>()
+            else -> BoughtFilter.BOTH
+        }
+        Log.d("Remon", "onChipCheckedStateChanged: ${filter.name}")
+        shoppingListViewModel.onBoughtFilterChanged(filter)
     }
 
     private fun renderShoppingList(state: State<List<ShoppingEntity>, QueryError>) {
