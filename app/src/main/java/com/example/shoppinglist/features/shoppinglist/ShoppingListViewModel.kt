@@ -1,6 +1,5 @@
 package com.example.shoppinglist.features.shoppinglist
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -26,34 +25,26 @@ class ShoppingListViewModel @Inject constructor(
     val shoppingListLiveData: LiveData<State<List<ShoppingEntity>, QueryError>> =
         shoppingListMutableLiveData
 
-    private val itemUpdateMutableLiveData = MutableLiveData<State<Nothing?, UpdateError>>()
+    private val itemUpdateMutableLiveData = MutableLiveData<State<UpdatedItem, UpdateError>>()
 
-    val itemUpdateLiveData: LiveData<State<Nothing?, UpdateError>> =
+    val itemUpdateLiveData: LiveData<State<UpdatedItem, UpdateError>> =
         itemUpdateMutableLiveData
 
 
     fun getShoppingListItemsUpdates() {
         shoppingListMutableLiveData.value = State.Loading
 
-
         viewModelScope.launch {
             preferencesFlow.collect { filter ->
-                Log.d("Remon", "getShoppingListItemsUpdates: filter = $filter")
                 viewModelScope.launch {
                     repo.getShoppingListFlowWithFilter(filter).collect { shoppingList ->
-                        Log.d("Remon", "getShoppingListItemsUpdates: list = $shoppingList")
                         val sortedList = when (filter.sortOrder) {
                             SortOrder.ASC -> shoppingList.sortedWith(compareBy { it.name })
                             SortOrder.DESC -> shoppingList.sortedWith(compareByDescending { it.name })
                         }
-
-                        Log.d("Remon", "getShoppingListItemsUpdates: sortedList = $sortedList")
-
                         shoppingListMutableLiveData.value = State.Success(sortedList)
-
                     }
                 }
-
             }
         }
     }
@@ -62,11 +53,12 @@ class ShoppingListViewModel @Inject constructor(
         itemUpdateMutableLiveData.value = State.Loading
         viewModelScope.launch {
             val result = repo.updateBoughtStatus(itemName, isBought)
+            val updatedItem = UpdatedItem(itemName, isBought)
 
-            val valueToPost = if (result > 0) State.Success(null)
+            val valueToPost = if (result > 0) State.Success(updatedItem)
             else State.Error(UpdateError.Failure)
 
-            itemUpdateMutableLiveData.postValue(valueToPost)
+            itemUpdateMutableLiveData.value = valueToPost
         }
     }
 
@@ -78,3 +70,8 @@ class ShoppingListViewModel @Inject constructor(
         preferencesManager.updateHideBought(boughtFilter)
     }
 }
+
+data class UpdatedItem(
+    val itemName: String,
+    val isBought: Boolean
+)
