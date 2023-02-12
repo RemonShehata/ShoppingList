@@ -8,6 +8,7 @@ import com.example.shoppinglist.data.*
 import com.example.shoppinglist.data.local.models.ShoppingEntity
 import com.example.shoppinglist.data.repos.ShoppingListRepo
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -35,12 +36,15 @@ class ShoppingListViewModel @Inject constructor(
         shoppingListMutableLiveData.value = State.Loading
 
         viewModelScope.launch {
-            preferencesFlow.collect { filter ->
+            preferencesFlow.combine(repo.getShoppingListFlow()) { prefsFlow, listFlow ->
+                prefsFlow
+            }.collect {
                 viewModelScope.launch {
+                    val filter = it.boughtFilter
                     repo.getShoppingListFlowWithFilter(filter).collect { shoppingList ->
-                        val sortedList = when (filter.sortOrder) {
-                            SortOrder.ASC -> shoppingList.sortedWith(compareBy { it.name })
-                            SortOrder.DESC -> shoppingList.sortedWith(compareByDescending { it.name })
+                        val sortedList = when (it.sortOrder) {
+                            SortOrder.ASC -> shoppingList.sortedWith(compareBy { item -> item.name })
+                            SortOrder.DESC -> shoppingList.sortedWith(compareByDescending { item -> item.name })
                         }
                         shoppingListMutableLiveData.value = State.Success(sortedList)
                     }
