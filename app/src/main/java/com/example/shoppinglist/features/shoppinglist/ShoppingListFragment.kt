@@ -12,12 +12,10 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.shoppinglist.R
-import com.example.shoppinglist.data.BoughtFilter
-import com.example.shoppinglist.data.QueryError
-import com.example.shoppinglist.data.SortOrder
-import com.example.shoppinglist.data.State
+import com.example.shoppinglist.data.*
 import com.example.shoppinglist.data.local.models.ShoppingEntity
 import com.example.shoppinglist.databinding.FragmentShoppingListBinding
+import com.example.shoppinglist.utils.showToast
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
@@ -71,6 +69,7 @@ class ShoppingListFragment : Fragment(), MenuProvider {
 
         with(shoppingListViewModel) {
             shoppingListLiveData.observe(viewLifecycleOwner, ::renderShoppingList)
+            itemUpdateLiveData.observe(viewLifecycleOwner, ::onItemStateUpdated)
             lifecycleScope.launch {
                 val initValue = shoppingListViewModel.preferencesFlow.first()
                 when (initValue.boughtFilter) {
@@ -121,6 +120,18 @@ class ShoppingListFragment : Fragment(), MenuProvider {
             is State.Success -> {
                 Log.d("Remon", "renderShoppingList: items: ${state.data}")
                 shoppingListAdapter.submitList(state.data)
+            }
+        }
+    }
+
+    private fun onItemStateUpdated(state: State<UpdatedItem, UpdateError>){
+        when(state){
+            is State.Error -> showToast("couldn't update state. try again...")
+            State.Loading -> TODO()
+            is State.Success -> {
+                val data = state.data
+                val state = if (data.isBought) "bought" else "not bought"
+                showToast("Updated item ${data.itemName} state to $state")
             }
         }
     }
