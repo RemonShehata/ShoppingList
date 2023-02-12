@@ -132,8 +132,8 @@ class ShoppingListFragment : Fragment(), MenuProvider {
             }
             is State.Success -> {
                 val data = state.data
-                val state = if (data.isBought) "bought" else "not bought"
-                showToast("Updated item ${data.itemName} state to $state")
+                val isBought = if (data.isBought) "bought" else "not bought"
+                showToast("Updated item ${data.itemName} state to $isBought")
             }
         }
     }
