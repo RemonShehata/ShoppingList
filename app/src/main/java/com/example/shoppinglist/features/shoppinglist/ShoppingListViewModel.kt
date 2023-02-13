@@ -1,10 +1,7 @@
 package com.example.shoppinglist.features.shoppinglist
 
 import android.util.Log
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import com.example.shoppinglist.data.*
 import com.example.shoppinglist.data.local.models.ShoppingEntity
 import com.example.shoppinglist.data.repos.ShoppingListRepo
@@ -21,6 +18,7 @@ class ShoppingListViewModel @Inject constructor(
 ) : ViewModel() {
 
     val preferencesFlow = preferencesManager.preferencesFlow
+    val preferencesLiveData = preferencesManager.preferencesFlow.asLiveData()
 
     private val shoppingListMutableLiveData =
         MutableLiveData<State<List<ShoppingEntity>, QueryError>>()
