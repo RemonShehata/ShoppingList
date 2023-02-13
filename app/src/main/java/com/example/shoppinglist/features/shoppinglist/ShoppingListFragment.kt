@@ -191,34 +191,26 @@ class ShoppingListFragment : Fragment(), MenuProvider {
         return when (menuItem.itemId) {
             R.id.showBought -> {
                 onBoughtFilterStateChanged(BoughtFilter.BOUGHT)
-//                binding.notBoughtChip.isChecked = false
-//                binding.boughtChip.isChecked = true
                 true
             }
 
             R.id.showNotBought -> {
                 onBoughtFilterStateChanged(BoughtFilter.NOT_BOUGHT)
-//                binding.notBoughtChip.isChecked = true
-//                binding.boughtChip.isChecked = false
                 true
             }
 
             R.id.showBoth -> {
                 onBoughtFilterStateChanged(BoughtFilter.BOTH)
-//                binding.notBoughtChip.isChecked = true
-//                binding.boughtChip.isChecked = true
                 true
             }
 
             R.id.sortAscending -> {
                 onSortFilterChanged(SortOrder.ASC)
-//                binding.ascChip.isChecked = true
                 true
             }
 
             R.id.sortDescending -> {
                 onSortFilterChanged(SortOrder.DESC)
-//                binding.dscChip.isChecked = true
                 true
             }
 
