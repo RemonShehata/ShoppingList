@@ -7,6 +7,14 @@ ShoppingList app is a small demo application to demonstrate modern Android appli
 </p>
 
 ## Screenshots:
+![shopping_list_home1](https://user-images.githubusercontent.com/47400411/218579053-a8329c38-5711-4438-aa2d-b193d52fa2c8.png)
+&nbsp; &nbsp;
+![shopping_list_home_2](https://user-images.githubusercontent.com/47400411/218579797-e5032bdc-2644-452c-b5aa-68d33f206f36.png)
+&nbsp; &nbsp;
+![shopping_list_add](https://user-images.githubusercontent.com/47400411/218579846-6a131712-8cdf-4ebd-ad4d-e029b2a799fd.png)
+&nbsp; &nbsp;
+![shopping_list_edit](https://user-images.githubusercontent.com/47400411/218579900-3785e89a-caf0-4d0d-9673-946faffb0a3a.png)
+
 
 ## Tech stack & Open-source libraries
 - Minimum SDK level 28
