@@ -201,11 +201,13 @@ class ShoppingListFragment : Fragment(), MenuProvider {
 
             R.id.sortAscending -> {
                 onSortFilterChanged(SortOrder.ASC)
+                binding.ascChip.isChecked = true
                 true
             }
 
             R.id.sortDescending -> {
                 onSortFilterChanged(SortOrder.DESC)
+                binding.dscChip.isChecked = true
                 true
             }
 
