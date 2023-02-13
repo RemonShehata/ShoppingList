@@ -1,14 +1,18 @@
 package com.example.shoppinglist.utils
 
 import android.view.View
+import android.widget.CheckBox
 import android.widget.Toast
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import com.google.android.material.textfield.TextInputEditText
 
-fun TextInputEditText.getInputEditTextString() {
-    this.text.toString()
-}
+fun TextInputEditText.string(): String =
+    this.text.toString().trim()
+
+fun CheckBox.string(): String =
+    this.text.toString().trim()
+
 
 fun TextInputEditText.getInputEditTextInt() {
     this.text.toString().toInt()
