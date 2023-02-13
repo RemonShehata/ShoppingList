@@ -1,13 +1,51 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
-<item android:title="@string/filter"
-    android:id="@+id/filterMenuButton"
-    app:showAsAction="ifRoom"
-    android:icon="@drawable/ic_filter"/>
+    <item
+        android:id="@+id/SearchMenuButton"
+        android:icon="@drawable/ic_search"
+        android:title="@string/search"
+        app:showAsAction="always|collapseActionView"
+        app:actionViewClass="androidx.appcompat.widget.SearchView"/>
+    <item
+        android:id="@+id/filterMenuButton"
+        android:icon="@drawable/ic_filter"
+        android:title="@string/filter"
+        app:showAsAction="ifRoom" >
+        <menu>
+            <item
+                android:id="@+id/showBought"
+                android:title="@string/show_bought"
+                app:showAsAction="never"/>
 
-    <item android:title="@string/sort"
-        android:id="@+id/SortMenuButton"
-        app:showAsAction="ifRoom"
-        android:icon="@drawable/ic_sort"/>
+            <item
+                android:id="@+id/showNotBought"
+                android:title="@string/show_not_bought"
+                app:showAsAction="never"/>
+
+            <item
+                android:id="@+id/showBoth"
+                android:title="@string/show_all"
+                app:showAsAction="never"/>
+        </menu>
+
+    </item>
+
+    <item
+        android:id="@+id/sortMenuButton"
+        android:icon="@drawable/ic_sort"
+        android:title="@string/sort"
+        app:showAsAction="ifRoom">
+        <menu>
+            <item
+                android:id="@+id/sortAscending"
+                android:title="@string/sort_ascending"
+                app:showAsAction="never"/>
+
+            <item
+                android:id="@+id/sortDescending"
+                android:title="@string/sort_descending"
+                app:showAsAction="never"/>
+        </menu>
+    </item>
 </menu>

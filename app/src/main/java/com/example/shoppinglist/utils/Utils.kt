@@ -2,6 +2,7 @@ package com.example.shoppinglist.utils
 
 import android.view.View
 import android.widget.Toast
+import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import com.google.android.material.textfield.TextInputEditText
 
@@ -11,6 +12,19 @@ fun TextInputEditText.getInputEditTextString() {
 
 fun TextInputEditText.getInputEditTextInt() {
     this.text.toString().toInt()
+}
+
+inline fun SearchView.onQueryTextChanged(crossinline listener: (String) -> Unit) {
+    this.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+        override fun onQueryTextSubmit(query: String?): Boolean {
+            return true
+        }
+
+        override fun onQueryTextChange(newText: String?): Boolean {
+            listener(newText.orEmpty())
+            return true
+        }
+    })
 }
 
 fun Fragment.showToast(message: String) {
