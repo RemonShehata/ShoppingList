@@ -169,34 +169,29 @@ class ShoppingListFragment : Fragment(), MenuProvider {
         val searchView: SearchView = searchItem.actionView as SearchView
 
         searchView.onQueryTextChanged {
-
+            shoppingListViewModel.searchQuery.value  = it
         }
     }
 
     override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
         return when (menuItem.itemId) {
             R.id.showBought -> {
-                Log.d("Remon", "onMenuItemSelected: filterMenuButton")
                 true
             }
 
             R.id.showNotBought -> {
-                Log.d("Remon", "onMenuItemSelected: filterMenuButton")
                 true
             }
 
             R.id.showBoth -> {
-                Log.d("Remon", "onMenuItemSelected: filterMenuButton")
                 true
             }
 
             R.id.sortAscending -> {
-                Log.d("Remon", "onMenuItemSelected: SortMenuButton")
                 true
             }
 
             R.id.sortDescending -> {
-                Log.d("Remon", "onMenuItemSelected: SortMenuButton")
                 true
             }
 

@@ -24,6 +24,11 @@ interface ShoppingListDao {
     @Query("SELECT * FROM shopping_entity")
      fun getShoppingListItemsFlow(): Flow<List<ShoppingEntity>>
 
+    @Query("SELECT * FROM shopping_entity " +
+            "WHERE name LIKE '%' || :searchQuery || '%' " +
+            "OR description LIKE '%' || :searchQuery || '%'")
+    fun getShoppingListItemsWithSearchFlow(searchQuery: String): Flow<List<ShoppingEntity>>
+
     @Query("SELECT * FROM shopping_entity WHERE is_bought = 0")
     fun getShoppingListNotBoughtItemsFlow(): Flow<List<ShoppingEntity>>
 
