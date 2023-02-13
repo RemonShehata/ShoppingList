@@ -108,10 +108,8 @@ class AddItemFragment : Fragment() {
             is State.Success -> {
                 with(binding) {
                     progressBar.invisible()
-                    itemName.text?.clear()
-                    itemQuantity.text?.clear()
-                    itemDescription.text?.clear()
                     showToast("Added item successfully")
+                    findNavController().navigateUp()
                 }
             }
         }
