@@ -7,11 +7,12 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
-import com.example.shoppinglist.data.UpdateError
 import com.example.shoppinglist.data.InsertionError
+import com.example.shoppinglist.data.InvalidField
 import com.example.shoppinglist.data.State
 import com.example.shoppinglist.data.local.models.ShoppingEntity
 import com.example.shoppinglist.databinding.FragmentAddItemBinding
+import com.example.shoppinglist.utils.string
 import com.example.shoppinglist.utils.invisible
 import com.example.shoppinglist.utils.showToast
 import com.example.shoppinglist.utils.visible
@@ -33,8 +34,8 @@ class AddItemFragment : Fragment() {
 
             saveButton.setOnClickListener {
                 val shoppingEntity = ShoppingEntity(
-                    name = binding.itemName.text.toString(),
-                    quantity = binding.itemQuantity.text.toString().toInt(),
+                    name = binding.itemName.string(),
+                    quantity = binding.itemQuantity.text.toString(),
                     description = binding.itemDescription.text.toString(),
                     isBought = false // not bought when first added.
                 )
@@ -62,15 +63,26 @@ class AddItemFragment : Fragment() {
         when (state) {
             is State.Error -> {
                 binding.progressBar.invisible()
-                when(state.errorType){
+                when (state.errorType) {
                     InsertionError.DuplicateItem -> showToast("Item already exist, you can modify it")
+                    is InsertionError.InvalidData -> {
+                        when (state.errorType.fields) {
+                            InvalidField.ItemName -> {
+                                binding.itemNameTextInputLayout.error = "This field can't be empty"
+                            }
+                            InvalidField.ItemQuantity -> {
+                                binding.itemQuantityTextInputLayout.error =
+                                    "This field can't be empty"
+                            }
+                        }
+                    }
                 }
             }
 
             State.Loading -> binding.progressBar.visible()
 
             is State.Success -> {
-                with(binding){
+                with(binding) {
                     progressBar.invisible()
                     itemName.text?.clear()
                     itemQuantity.text?.clear()
