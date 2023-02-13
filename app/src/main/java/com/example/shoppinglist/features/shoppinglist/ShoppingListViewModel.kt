@@ -18,7 +18,6 @@ class ShoppingListViewModel @Inject constructor(
 ) : ViewModel() {
 
     val preferencesFlow = preferencesManager.preferencesFlow
-    val preferencesLiveData = preferencesManager.preferencesFlow.asLiveData()
 
     private val shoppingListMutableLiveData =
         MutableLiveData<State<List<ShoppingEntity>, QueryError>>()
