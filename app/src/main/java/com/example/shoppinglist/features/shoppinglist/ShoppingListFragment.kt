@@ -198,34 +198,35 @@ class ShoppingListFragment : Fragment(), MenuProvider {
     }
 
     override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
-        return when (menuItem.itemId) {
-            R.id.showBought -> {
-                onBoughtFilterStateChanged(BoughtFilter.BOUGHT)
-                true
-            }
-
-            R.id.showNotBought -> {
-                onBoughtFilterStateChanged(BoughtFilter.NOT_BOUGHT)
-                true
-            }
-
-            R.id.showBoth -> {
-                onBoughtFilterStateChanged(BoughtFilter.BOTH)
-                true
-            }
-
-            R.id.sortAscending -> {
-                onSortFilterChanged(SortOrder.ASC)
-                true
-            }
-
-            R.id.sortDescending -> {
-                onSortFilterChanged(SortOrder.DESC)
-                true
-            }
-
-            else -> false
-        }
+//        return when (menuItem.itemId) {
+//            R.id.showBought -> {
+//                onBoughtFilterStateChanged(BoughtFilter.BOUGHT)
+//                true
+//            }
+//
+//            R.id.showNotBought -> {
+//                onBoughtFilterStateChanged(BoughtFilter.NOT_BOUGHT)
+//                true
+//            }
+//
+//            R.id.showBoth -> {
+//                onBoughtFilterStateChanged(BoughtFilter.BOTH)
+//                true
+//            }
+//
+//            R.id.sortAscending -> {
+//                onSortFilterChanged(SortOrder.ASC)
+//                true
+//            }
+//
+//            R.id.sortDescending -> {
+//                onSortFilterChanged(SortOrder.DESC)
+//                true
+//            }
+//
+//            else -> false
+//        }
+        return false
     }
 
     companion object {
