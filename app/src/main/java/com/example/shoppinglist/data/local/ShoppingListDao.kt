@@ -19,9 +19,9 @@ interface ShoppingListDao {
 
     @Query(
         "SELECT * FROM shopping_entity " +
-                "WHERE is_bought = :isBought " +
-                "AND name LIKE '%' || :searchQuery || '%' " +
-                "OR description LIKE '%' || :searchQuery || '%'"
+                "WHERE (is_bought = :isBought) " +
+                "AND " +
+                "(name LIKE '%' || :searchQuery || '%' OR description LIKE '%' || :searchQuery || '%')"
     )
     fun getShoppingListItemsWithSearchFlow(
         searchQuery: String,
@@ -33,13 +33,9 @@ interface ShoppingListDao {
                 "WHERE name LIKE '%' || :searchQuery || '%' " +
                 "OR description LIKE '%' || :searchQuery || '%'"
     )
-    fun getShoppingListItemsWithSearchFlow2(
+    fun getShoppingListItemsWithSearchFlow(
         searchQuery: String,
     ): Flow<List<ShoppingEntity>>
-
-
-    @Query("UPDATE shopping_entity SET is_bought = :isBought WHERE name = :itemName")
-    suspend fun updateBoughtStatus(itemName: String, isBought: Boolean): Int
 
     fun getShoppingListWithFiltersFlow(
         query: String,
@@ -47,10 +43,14 @@ interface ShoppingListDao {
     ): Flow<List<ShoppingEntity>> {
         return when (boughtFilter) {
             BoughtFilter.BOUGHT -> getShoppingListItemsWithSearchFlow(query, 1)
-            BoughtFilter.NOT_BOUGHT -> getShoppingListItemsWithSearchFlow(query, 0)
-            BoughtFilter.BOTH -> getShoppingListItemsWithSearchFlow2(query)
+            BoughtFilter.NOT_BOUGHT -> getShoppingListItemsWithSearchFlow(query, 1)
+            BoughtFilter.BOTH -> getShoppingListItemsWithSearchFlow(query)
         }
     }
+
+
+    @Query("UPDATE shopping_entity SET is_bought = :isBought WHERE name = :itemName")
+    suspend fun updateBoughtStatus(itemName: String, isBought: Boolean): Int
 
     @Delete
     suspend fun deleteShoppingItem(shoppingEntity: ShoppingEntity): Int
