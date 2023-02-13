@@ -9,15 +9,20 @@ import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.shoppinglist.R
 import com.example.shoppinglist.data.*
 import com.example.shoppinglist.data.local.models.ShoppingEntity
 import com.example.shoppinglist.databinding.FragmentShoppingListBinding
+import com.example.shoppinglist.utils.invisible
 import com.example.shoppinglist.utils.onQueryTextChanged
 import com.example.shoppinglist.utils.showToast
+import com.example.shoppinglist.utils.visible
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class ShoppingListFragment : Fragment(), MenuProvider {
@@ -71,7 +76,9 @@ class ShoppingListFragment : Fragment(), MenuProvider {
         with(shoppingListViewModel) {
             shoppingListLiveData.observe(viewLifecycleOwner, ::renderShoppingList)
             itemUpdateLiveData.observe(viewLifecycleOwner, ::onItemStateUpdated)
-            preferencesLiveData.observe(viewLifecycleOwner, ::onFilterPreferenceUpdated)
+            lifecycleScope.launch {
+                onFilterPreferenceUpdated(preferencesFlow.first())
+            }
         }
     }
 
@@ -127,14 +134,18 @@ class ShoppingListFragment : Fragment(), MenuProvider {
 
     private fun renderShoppingList(state: State<List<ShoppingEntity>, QueryError>) {
         when (state) {
-            is State.Error -> TODO()
+            is State.Error -> {
+                binding.progressBar.invisible()
+                showToast("An error occurred!")
+            }
 
             State.Loading -> {
-
+                binding.progressBar.visible()
             }
 
             is State.Success -> {
-                Log.d("Remon", "renderShoppingList: items: ${state.data}")
+                binding.progressBar.invisible()
+//                Log.d("Remon", "renderShoppingList: items: ${state.data}")
                 shoppingListAdapter.submitList(state.data)
             }
         }
@@ -144,12 +155,11 @@ class ShoppingListFragment : Fragment(), MenuProvider {
         when (state) {
             is State.Error -> showToast("couldn't update state. try again...")
             State.Loading -> {
-
+                // TODO: progressbar on the checkbox?
             }
             is State.Success -> {
                 val data = state.data
                 val isBought = if (data.isBought) "bought" else "not bought"
-//                showToast("Updated item ${data.itemName} state to $isBought")
                 Log.d(TAG, "Updated item ${data.itemName} state to $isBought")
             }
         }
