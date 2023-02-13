@@ -51,7 +51,6 @@ class ShoppingListViewModel @Inject constructor(
                 searchQuery
             ) { prefsFlow, listFlow, query ->
                 Pair(prefsFlow, query)
-
             }.collect {
                 val prefsFlow = it.first
                 val filter = prefsFlow.boughtFilter
@@ -71,21 +70,6 @@ class ShoppingListViewModel @Inject constructor(
                 }
 
             }
-
-//            preferencesFlow.combine(repo.getShoppingListFlow()) { prefsFlow, listFlow ->
-//                prefsFlow
-//            }.collect {
-//                viewModelScope.launch {
-//                    val filter = it.boughtFilter
-//                    repo.getShoppingListFlowWithFilter(filter).collect { shoppingList ->
-//                        val sortedList = when (it.sortOrder) {
-//                            SortOrder.ASC -> shoppingList.sortedWith(compareBy { item -> item.name })
-//                            SortOrder.DESC -> shoppingList.sortedWith(compareByDescending { item -> item.name })
-//                        }
-//                        shoppingListMutableLiveData.value = State.Success(sortedList)
-//                    }
-//                }
-//            }
         }
     }
 
