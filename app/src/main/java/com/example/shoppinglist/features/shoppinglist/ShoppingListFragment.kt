@@ -98,6 +98,10 @@ class ShoppingListFragment : Fragment(), MenuProvider {
             listOf(R.id.dscChip) -> SortOrder.DESC
             else -> SortOrder.ASC
         }
+        onSortFilterChanged(sort)
+    }
+
+    private fun onSortFilterChanged(sort: SortOrder) {
         shoppingListViewModel.onSortOrderSelected(sort)
     }
 
@@ -109,6 +113,10 @@ class ShoppingListFragment : Fragment(), MenuProvider {
             else -> BoughtFilter.BOTH
         }
         Log.d("Remon", "onChipCheckedStateChanged: ${filter.name}")
+        onBoughtFilterStateChanged(filter)
+    }
+
+    private fun onBoughtFilterStateChanged(filter: BoughtFilter) {
         shoppingListViewModel.onBoughtFilterChanged(filter)
     }
 
@@ -177,22 +185,27 @@ class ShoppingListFragment : Fragment(), MenuProvider {
     override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
         return when (menuItem.itemId) {
             R.id.showBought -> {
+                onBoughtFilterStateChanged(BoughtFilter.BOUGHT)
                 true
             }
 
             R.id.showNotBought -> {
+                onBoughtFilterStateChanged(BoughtFilter.NOT_BOUGHT)
                 true
             }
 
             R.id.showBoth -> {
+                onBoughtFilterStateChanged(BoughtFilter.BOTH)
                 true
             }
 
             R.id.sortAscending -> {
+                onSortFilterChanged(SortOrder.ASC)
                 true
             }
 
             R.id.sortDescending -> {
+                onSortFilterChanged(SortOrder.DESC)
                 true
             }
 
