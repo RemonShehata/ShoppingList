@@ -47,18 +47,17 @@ jobs:
           name: unit-test-reports
           path: unit-test.zip
 
-#      - name: Create Firebase Service Credentials file
-#        run: |
-#            echo "$FIREBASE_CREDENTIALS" > firebase_credentials.json.b64
-#            base64 -d -i firebase_credentials.json.b64 > app/firebase_credentials.json
-#        env:
-#            FIREBASE_CREDENTIALS: ${{ secrets.FIREBASE_CREDENTIALS }}
-#
-#      - name: upload to firebase distribution
-#        run: ./gradlew appDistributionUploadDebug
-#
-#      - name: Delete Secret Data Files
-#        run: |
-#             rm ./local.properties
-#             rm firebase_credentials.json.b64
-#             rm app/firebase_credentials.json
+      - name: Create Firebase Service Credentials file
+        run: |
+            echo "$FIREBASE_CREDENTIALS" > firebase_credentials.json.b64
+            base64 -d -i firebase_credentials.json.b64 > app/firebase_credentials.json
+        env:
+            FIREBASE_CREDENTIALS: ${{ secrets.FIREBASE_CREDENTIALS }}
+
+      - name: upload to firebase distribution
+        run: ./gradlew appDistributionUploadDebug
+
+      - name: Delete Secret Data Files
+        run: |
+             rm firebase_credentials.json.b64
+             rm app/firebase_credentials.json
