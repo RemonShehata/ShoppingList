@@ -136,7 +136,8 @@ class ShoppingListFragment : Fragment(), MenuProvider {
             is State.Success -> {
                 val data = state.data
                 val isBought = if (data.isBought) "bought" else "not bought"
-                showToast("Updated item ${data.itemName} state to $isBought")
+//                showToast("Updated item ${data.itemName} state to $isBought")
+                Log.d(TAG, "Updated item ${data.itemName} state to $isBought")
             }
         }
     }
@@ -197,5 +198,9 @@ class ShoppingListFragment : Fragment(), MenuProvider {
 
             else -> false
         }
+    }
+
+    companion object {
+        private const val TAG = "ShoppingListFragment"
     }
 }
