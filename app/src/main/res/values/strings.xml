@@ -11,4 +11,10 @@
     <string name="asc">ASC</string>
     <string name="desc">DESC</string>
     <string name="update">update</string>
+    <string name="search">Search</string>
+    <string name="sort_ascending">sort ascending</string>
+    <string name="show_bought">show bought</string>
+    <string name="show_not_bought">show not bought</string>
+    <string name="show_all">show all</string>
+    <string name="sort_descending">sort descending</string>
 </resources>

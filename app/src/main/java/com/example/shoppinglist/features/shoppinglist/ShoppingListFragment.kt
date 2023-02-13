@@ -3,6 +3,7 @@ package com.example.shoppinglist.features.shoppinglist
 import android.os.Bundle
 import android.util.Log
 import android.view.*
+import androidx.appcompat.widget.SearchView
 import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
@@ -15,6 +16,7 @@ import com.example.shoppinglist.R
 import com.example.shoppinglist.data.*
 import com.example.shoppinglist.data.local.models.ShoppingEntity
 import com.example.shoppinglist.databinding.FragmentShoppingListBinding
+import com.example.shoppinglist.utils.onQueryTextChanged
 import com.example.shoppinglist.utils.showToast
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.first
@@ -64,6 +66,7 @@ class ShoppingListFragment : Fragment(), MenuProvider {
         binding.shoppingListRecyclerView.apply {
             layoutManager = LinearLayoutManager(requireContext())
             adapter = shoppingListAdapter
+            setHasFixedSize(true)
         }
 
 
@@ -162,16 +165,37 @@ class ShoppingListFragment : Fragment(), MenuProvider {
 
     override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
         menuInflater.inflate(R.menu.menu, menu)
+        val searchItem = menu.findItem(R.id.SearchMenuButton)
+        val searchView: SearchView = searchItem.actionView as SearchView
+
+        searchView.onQueryTextChanged {
+
+        }
     }
 
     override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
         return when (menuItem.itemId) {
-            R.id.filterMenuButton -> {
+            R.id.showBought -> {
                 Log.d("Remon", "onMenuItemSelected: filterMenuButton")
                 true
             }
 
-            R.id.SortMenuButton -> {
+            R.id.showNotBought -> {
+                Log.d("Remon", "onMenuItemSelected: filterMenuButton")
+                true
+            }
+
+            R.id.showBoth -> {
+                Log.d("Remon", "onMenuItemSelected: filterMenuButton")
+                true
+            }
+
+            R.id.sortAscending -> {
+                Log.d("Remon", "onMenuItemSelected: SortMenuButton")
+                true
+            }
+
+            R.id.sortDescending -> {
                 Log.d("Remon", "onMenuItemSelected: SortMenuButton")
                 true
             }
