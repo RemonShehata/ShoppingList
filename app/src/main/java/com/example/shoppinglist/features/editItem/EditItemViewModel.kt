@@ -4,7 +4,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.shoppinglist.data.InsertionError
 import com.example.shoppinglist.data.State
 import com.example.shoppinglist.data.UpdateError
 import com.example.shoppinglist.data.local.DuplicateItemException
