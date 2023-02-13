@@ -8,12 +8,6 @@ interface ShoppingListRepo {
     suspend fun saveShoppingItem(item: ShoppingEntity): Long
     suspend fun getShoppingList(): List<ShoppingEntity>
     fun getShoppingListFlow(): Flow<List<ShoppingEntity>>
-
-    fun getShoppingListNotBoughtItemsFlow(): Flow<List<ShoppingEntity>>
-
-    fun getShoppingListBoughtItemsFlow(): Flow<List<ShoppingEntity>>
-
-    fun getShoppingListFlowWithFilter(filterPreferences: BoughtFilter): Flow<List<ShoppingEntity>>
     fun getShoppingListItemsWithSearchFlow(
         searchQuery: String,
         boughtFilter: BoughtFilter

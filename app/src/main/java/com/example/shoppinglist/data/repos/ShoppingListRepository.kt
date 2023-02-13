@@ -28,31 +28,11 @@ class ShoppingListRepository @Inject constructor(private val shoppingListDao: Sh
 
     }
 
-    override fun getShoppingListNotBoughtItemsFlow(): Flow<List<ShoppingEntity>> {
-        return shoppingListDao.getShoppingListNotBoughtItemsFlow()
-    }
-
-    override fun getShoppingListBoughtItemsFlow(): Flow<List<ShoppingEntity>> {
-        return shoppingListDao.getShoppingListBoughtItemsFlow()
-    }
-
-    override fun getShoppingListFlowWithFilter(filterPreferences: BoughtFilter): Flow<List<ShoppingEntity>> {
-        return shoppingListDao.getShoppingListFlowWithFilter(filterPreferences)
-    }
-
     override fun getShoppingListItemsWithSearchFlow(
         searchQuery: String,
         boughtFilter: BoughtFilter
     ): Flow<List<ShoppingEntity>> {
-        return when (boughtFilter) {
-            BoughtFilter.BOUGHT -> {
-                shoppingListDao.getShoppingListItemsWithSearchFlow(searchQuery, 1)
-            }
-            BoughtFilter.NOT_BOUGHT -> {
-                shoppingListDao.getShoppingListItemsWithSearchFlow(searchQuery, 0)
-            }
-            BoughtFilter.BOTH -> shoppingListDao.getShoppingListItemsWithSearchFlow2(searchQuery)
-        }
+        return shoppingListDao.getShoppingListWithFiltersFlow(searchQuery, boughtFilter)
     }
 
     override suspend fun updateBoughtStatus(itemName: String, isBought: Boolean): Int {

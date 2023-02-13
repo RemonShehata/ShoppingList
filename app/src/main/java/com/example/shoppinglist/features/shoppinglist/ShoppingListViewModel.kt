@@ -70,7 +70,6 @@ class ShoppingListViewModel @Inject constructor(
                     }
                 }
 
-
             }
 
 //            preferencesFlow.combine(repo.getShoppingListFlow()) { prefsFlow, listFlow ->
