@@ -81,6 +81,10 @@ class ShoppingListAdapter(
         context = recyclerView.context
     }
 
+    override fun getItemId(position: Int): Long {
+        return differ.currentList[position].hashCode().toLong()
+    }
+
     inner class ShoppingListViewHolder(val binding: ShoppingItemBinding) :
         RecyclerView.ViewHolder(binding.root)
 }
