@@ -47,4 +47,8 @@ class ShoppingListRepository @Inject constructor(private val shoppingListDao: Sh
     override suspend fun removeItem(shoppingEntity: ShoppingEntity): Int {
         return shoppingListDao.deleteShoppingItem(shoppingEntity)
     }
+
+    override suspend fun updateItem(shoppingEntity: ShoppingEntity): Int {
+        return shoppingListDao.updateShoppingItem(shoppingEntity)
+    }
 }
