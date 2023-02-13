@@ -46,6 +46,3 @@ jobs:
 
       - name: detekt
         run: ./gradlew detekt --stacktrace
-
-#      - name: Delete API key file
-#        run: rm ./local.properties
