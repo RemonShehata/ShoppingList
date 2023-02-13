@@ -1,4 +1,1 @@
-- Fixed a bug with bought and not bought filters
-- Removed toast when updating item state to bought and vice versa
-- Implemented the action buttons functionality
-- Show errors when adding new item and fields are empty
+- Remove filtering from menu
