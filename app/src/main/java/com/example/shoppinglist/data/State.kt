@@ -8,7 +8,12 @@ sealed class State<out T, out E> {
 
 sealed class InsertionError {
     object DuplicateItem : InsertionError()
+    data class InvalidData(val fields: InvalidField) : InsertionError()
+}
 
+sealed class InvalidField {
+    object ItemName : InvalidField()
+    object ItemQuantity : InvalidField()
 }
 
 sealed class UpdateError {
