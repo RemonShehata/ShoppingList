@@ -9,7 +9,6 @@ import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.shoppinglist.R
@@ -19,8 +18,6 @@ import com.example.shoppinglist.databinding.FragmentShoppingListBinding
 import com.example.shoppinglist.utils.onQueryTextChanged
 import com.example.shoppinglist.utils.showToast
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class ShoppingListFragment : Fragment(), MenuProvider {
@@ -62,7 +59,8 @@ class ShoppingListFragment : Fragment(), MenuProvider {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        shoppingListAdapter = ShoppingListAdapter(onItemClicked, onCheckStateChanged, onDeleteItemClicked)
+        shoppingListAdapter =
+            ShoppingListAdapter(onItemClicked, onCheckStateChanged, onDeleteItemClicked)
         binding.shoppingListRecyclerView.apply {
             layoutManager = LinearLayoutManager(requireContext())
             adapter = shoppingListAdapter
@@ -73,22 +71,29 @@ class ShoppingListFragment : Fragment(), MenuProvider {
         with(shoppingListViewModel) {
             shoppingListLiveData.observe(viewLifecycleOwner, ::renderShoppingList)
             itemUpdateLiveData.observe(viewLifecycleOwner, ::onItemStateUpdated)
-            lifecycleScope.launch {
-                val initValue = shoppingListViewModel.preferencesFlow.first()
-                when (initValue.boughtFilter) {
-                    BoughtFilter.BOUGHT -> binding.boughtChip.isChecked = true
-                    BoughtFilter.NOT_BOUGHT -> binding.notBoughtChip.isChecked = true
-                    BoughtFilter.BOTH -> {
-                        binding.boughtChip.isChecked = true
-                        binding.notBoughtChip.isChecked = true
-                    }
-                }
+            preferencesLiveData.observe(viewLifecycleOwner, ::onFilterPreferenceUpdated)
+        }
+    }
 
-                when (initValue.sortOrder) {
-                    SortOrder.ASC -> binding.ascChip.isChecked = true
-                    SortOrder.DESC -> binding.dscChip.isChecked = true
-                }
+    private fun onFilterPreferenceUpdated(preferences: FilterPreferences) {
+        when (preferences.boughtFilter) {
+            BoughtFilter.BOUGHT -> {
+                binding.boughtChip.isChecked = true
+                binding.notBoughtChip.isChecked = false
             }
+            BoughtFilter.NOT_BOUGHT -> {
+                binding.boughtChip.isChecked = false
+                binding.notBoughtChip.isChecked = true
+            }
+            BoughtFilter.BOTH -> {
+                binding.boughtChip.isChecked = true
+                binding.notBoughtChip.isChecked = true
+            }
+        }
+
+        when (preferences.sortOrder) {
+            SortOrder.ASC -> binding.ascChip.isChecked = true
+            SortOrder.DESC -> binding.dscChip.isChecked = true
         }
     }
 
@@ -113,7 +118,7 @@ class ShoppingListFragment : Fragment(), MenuProvider {
             else -> BoughtFilter.BOTH
         }
         Log.d("Remon", "onChipCheckedStateChanged: ${filter.name}")
-        onBoughtFilterStateChanged(filter)
+        shoppingListViewModel.onBoughtFilterChanged(filter)
     }
 
     private fun onBoughtFilterStateChanged(filter: BoughtFilter) {
@@ -178,7 +183,7 @@ class ShoppingListFragment : Fragment(), MenuProvider {
         val searchView: SearchView = searchItem.actionView as SearchView
 
         searchView.onQueryTextChanged {
-            shoppingListViewModel.searchQuery.value  = it
+            shoppingListViewModel.searchQuery.value = it
         }
     }
 
@@ -186,28 +191,34 @@ class ShoppingListFragment : Fragment(), MenuProvider {
         return when (menuItem.itemId) {
             R.id.showBought -> {
                 onBoughtFilterStateChanged(BoughtFilter.BOUGHT)
+//                binding.notBoughtChip.isChecked = false
+//                binding.boughtChip.isChecked = true
                 true
             }
 
             R.id.showNotBought -> {
                 onBoughtFilterStateChanged(BoughtFilter.NOT_BOUGHT)
+//                binding.notBoughtChip.isChecked = true
+//                binding.boughtChip.isChecked = false
                 true
             }
 
             R.id.showBoth -> {
                 onBoughtFilterStateChanged(BoughtFilter.BOTH)
+//                binding.notBoughtChip.isChecked = true
+//                binding.boughtChip.isChecked = true
                 true
             }
 
             R.id.sortAscending -> {
                 onSortFilterChanged(SortOrder.ASC)
-                binding.ascChip.isChecked = true
+//                binding.ascChip.isChecked = true
                 true
             }
 
             R.id.sortDescending -> {
                 onSortFilterChanged(SortOrder.DESC)
-                binding.dscChip.isChecked = true
+//                binding.dscChip.isChecked = true
                 true
             }
 
