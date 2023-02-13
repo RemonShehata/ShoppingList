@@ -66,6 +66,7 @@ class ShoppingListFragment : Fragment(), MenuProvider {
 
         shoppingListAdapter =
             ShoppingListAdapter(onItemClicked, onCheckStateChanged, onDeleteItemClicked)
+        shoppingListAdapter.setHasStableIds(true)
         binding.shoppingListRecyclerView.apply {
             layoutManager = LinearLayoutManager(requireContext())
             adapter = shoppingListAdapter
