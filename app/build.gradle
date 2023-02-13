@@ -6,6 +6,8 @@ plugins {
     id 'androidx.navigation.safeargs'
     id 'kotlin-kapt'
     id 'com.google.dagger.hilt.android'
+    id 'com.google.gms.google-services'
+    id 'com.google.firebase.appdistribution'
 }
 
 apply from: '../jacoco.gradle'
@@ -33,6 +35,16 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+
+        debug {
+            firebaseAppDistribution {
+                appId = "1:511732515517:android:91641c5e21d1833e7c6dd4"
+                artifactType = "APK"
+                releaseNotesFile = "app/release-notes.txt"
+                serviceCredentialsFile = "app/firebase_credentials.json"
+                groups = "beta-testers"
+            }
         }
     }
     compileOptions {
@@ -75,6 +87,8 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-runtime-ktx:$lifecycle_extensions_version"
 
     implementation "androidx.datastore:datastore-preferences:$data_store_version"
+
+    implementation platform('com.google.firebase:firebase-bom:31.2.0')
 
 
     testImplementation 'junit:junit:4.13.2'
