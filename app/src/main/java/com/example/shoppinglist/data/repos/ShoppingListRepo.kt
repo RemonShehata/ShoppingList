@@ -17,4 +17,6 @@ interface ShoppingListRepo {
 
     suspend fun updateBoughtStatus(itemName: String, isBought: Boolean): Int
     suspend fun removeItem(shoppingEntity: ShoppingEntity): Int
+
+    suspend fun updateItem(shoppingEntity: ShoppingEntity): Int
 }

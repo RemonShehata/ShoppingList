@@ -6,6 +6,7 @@ import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import androidx.room.Update
 import com.example.shoppinglist.data.BoughtFilter
 import com.example.shoppinglist.data.FilterPreferences
 import com.example.shoppinglist.data.local.models.ShoppingEntity
@@ -42,4 +43,7 @@ interface ShoppingListDao {
 
     @Delete
     suspend fun deleteShoppingItem(shoppingEntity: ShoppingEntity): Int
+
+    @Update
+    suspend fun updateShoppingItem(shoppingEntity: ShoppingEntity): Int
 }
