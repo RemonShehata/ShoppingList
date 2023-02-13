@@ -43,7 +43,7 @@ interface ShoppingListDao {
     ): Flow<List<ShoppingEntity>> {
         return when (boughtFilter) {
             BoughtFilter.BOUGHT -> getShoppingListItemsWithSearchFlow(query, 1)
-            BoughtFilter.NOT_BOUGHT -> getShoppingListItemsWithSearchFlow(query, 1)
+            BoughtFilter.NOT_BOUGHT -> getShoppingListItemsWithSearchFlow(query, 0)
             BoughtFilter.BOTH -> getShoppingListItemsWithSearchFlow(query)
         }
     }
