@@ -1,5 +1,6 @@
 package com.example.shoppinglist.features.shoppinglist
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -9,6 +10,7 @@ import com.example.shoppinglist.data.local.models.ShoppingEntity
 import com.example.shoppinglist.data.repos.ShoppingListRepo
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -37,11 +39,20 @@ class ShoppingListViewModel @Inject constructor(
     val itemDeleteLiveData: LiveData<State<Nothing?, UpdateError>> =
         itemDeleteMutableLiveData
 
+    val searchQuery = MutableStateFlow("")
+
 
     fun getShoppingListItemsUpdates() {
         shoppingListMutableLiveData.value = State.Loading
 
         viewModelScope.launch {
+            combine(preferencesFlow,repo.getShoppingListFlow(), searchQuery) { prefsFlow, listFlow, query ->
+                Pair(prefsFlow, query)
+
+            }.collect{
+                Log.d("Remon", "getShoppingListItemsUpdates: ${it.second}")
+            }
+
             preferencesFlow.combine(repo.getShoppingListFlow()) { prefsFlow, listFlow ->
                 prefsFlow
             }.collect {
