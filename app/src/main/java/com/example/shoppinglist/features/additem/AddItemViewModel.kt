@@ -27,19 +27,18 @@ class AddItemViewModel @Inject constructor(private val repo: ShoppingListRepo) :
         if (shoppingEntity.name.isEmpty()) {
             addResultMutableLiveData.value =
                 State.Error(InsertionError.InvalidData(InvalidField.ItemName))
-            return
         } else if (shoppingEntity.quantity.isEmpty()) {
             addResultMutableLiveData.value =
                 State.Error(InsertionError.InvalidData(InvalidField.ItemQuantity))
-            return
-        }
+        } else {
 
-        viewModelScope.launch {
-            try {
-                repo.saveShoppingItem(shoppingEntity)
-                addResultMutableLiveData.value = State.Success(null)
-            } catch (ex: DuplicateItemException) {
-                addResultMutableLiveData.value = State.Error(InsertionError.DuplicateItem)
+            viewModelScope.launch {
+                try {
+                    repo.saveShoppingItem(shoppingEntity)
+                    addResultMutableLiveData.value = State.Success(null)
+                } catch (ex: DuplicateItemException) {
+                    addResultMutableLiveData.value = State.Error(InsertionError.DuplicateItem)
+                }
             }
         }
     }
