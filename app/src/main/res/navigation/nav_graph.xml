@@ -11,9 +11,29 @@
         <action
             android:id="@+id/action_shoppingListFragment_to_addItemFragment"
             app:destination="@id/addItemFragment" />
+        <action
+            android:id="@+id/action_shoppingListFragment_to_editItemFragment"
+            app:destination="@id/editItemFragment" />
     </fragment>
     <fragment
         android:id="@+id/addItemFragment"
         android:name="com.example.shoppinglist.features.additem.AddItemFragment"
         android:label="Add Shopping Item" />
+    <fragment
+        android:id="@+id/editItemFragment"
+        android:name="com.example.shoppinglist.features.editItem.EditItemFragment"
+        android:label="EditItemFragment" >
+        <argument
+            android:name="itemName"
+            app:argType="string" />
+        <argument
+            android:name="itemQuantity"
+            app:argType="integer" />
+        <argument
+            android:name="itemDescription"
+            app:argType="string" />
+        <argument
+            android:name="isItemBought"
+            app:argType="boolean" />
+    </fragment>
 </navigation>

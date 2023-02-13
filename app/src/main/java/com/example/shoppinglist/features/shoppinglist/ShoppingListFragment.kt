@@ -140,11 +140,14 @@ class ShoppingListFragment : Fragment(), MenuProvider {
 
 
     private val onItemClicked: (shoppingEntity: ShoppingEntity) -> Unit = { item ->
-//        findNavController().navigate(
-//            TrendingMoviesFragmentDirections.actionMoviesListFragmentToMovieDetailsFragment(
-//                movieId
-//            )
-//        )
+        findNavController().navigate(
+            ShoppingListFragmentDirections.actionShoppingListFragmentToEditItemFragment(
+                item.name,
+                item.quantity,
+                item.description,
+                item.isBought
+            )
+        )
     }
 
     private val onCheckStateChanged: (itemName: String, isChecked: Boolean) -> Unit =
