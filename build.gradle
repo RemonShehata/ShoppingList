@@ -6,6 +6,7 @@ buildscript {
         coroutine_version = '1.6.4'
         lifecycle_extensions_version = '2.5.1'
         data_store_version = '1.0.0'
+        shimmer_version = '0.5.0'
     }
     dependencies {
         classpath "androidx.navigation:navigation-safe-args-gradle-plugin:$navigation_component_version"
