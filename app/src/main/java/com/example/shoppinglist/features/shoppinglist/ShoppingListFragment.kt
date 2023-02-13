@@ -60,7 +60,7 @@ class ShoppingListFragment : Fragment(), MenuProvider {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        shoppingListAdapter = ShoppingListAdapter(onItemClicked, onCheckStateChanged)
+        shoppingListAdapter = ShoppingListAdapter(onItemClicked, onCheckStateChanged, onDeleteItemClicked)
         binding.shoppingListRecyclerView.apply {
             layoutManager = LinearLayoutManager(requireContext())
             adapter = shoppingListAdapter
@@ -151,6 +151,10 @@ class ShoppingListFragment : Fragment(), MenuProvider {
         { name, isChecked ->
             shoppingListViewModel.changeBoughtStatus(name, isChecked)
         }
+
+    private val onDeleteItemClicked: (shoppingEntity: ShoppingEntity) -> Unit = { item ->
+        shoppingListViewModel.onDeleteClicked(item)
+    }
 
 
     override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
