@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
-import com.example.shoppinglist.data.InsertionError
+import androidx.navigation.fragment.navArgs
 import com.example.shoppinglist.data.State
 import com.example.shoppinglist.data.UpdateError
 import com.example.shoppinglist.data.local.models.ShoppingEntity
@@ -22,7 +22,9 @@ class EditItemFragment : Fragment() {
 
     private lateinit var binding: FragmentEditItemBinding
 
-    private val addItemViewModel: EditItemViewModel by viewModels()
+    private val editItemViewModel: EditItemViewModel by viewModels()
+
+    private val args: EditItemFragmentArgs by navArgs()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -31,15 +33,17 @@ class EditItemFragment : Fragment() {
     ): View {
         binding = FragmentEditItemBinding.inflate(layoutInflater).apply {
 
-            saveButton.setOnClickListener {
+            loadInitDataOnUI()
+
+            updateButton.setOnClickListener {
                 val shoppingEntity = ShoppingEntity(
                     name = binding.itemName.text.toString(),
                     quantity = binding.itemQuantity.text.toString().toInt(),
                     description = binding.itemDescription.text.toString(),
-                    isBought = false // not bought when first added.
+                    isBought = itemName.isChecked
                 )
 
-                addItemViewModel.saveShoppingItem(shoppingEntity)
+                editItemViewModel.saveShoppingItem(shoppingEntity)
             }
 
             cancelButton.setOnClickListener {
@@ -50,10 +54,17 @@ class EditItemFragment : Fragment() {
         return binding.root
     }
 
+    private fun FragmentEditItemBinding.loadInitDataOnUI() {
+        itemName.text = args.itemName
+        itemQuantity.setText(args.itemQuantity.toString())
+        itemDescription.setText(args.itemDescription)
+        itemName.isChecked = args.isItemBought
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        with(addItemViewModel) {
+        with(editItemViewModel) {
             editResultLiveData.observe(viewLifecycleOwner, ::onUpdateCompleted)
         }
     }
@@ -62,7 +73,7 @@ class EditItemFragment : Fragment() {
         when (state) {
             is State.Error -> {
                 binding.progressBar.invisible()
-                when(state.errorType){
+                when (state.errorType) {
                     UpdateError.Failure -> showToast("Error while updating...try again")
                 }
             }
@@ -70,11 +81,9 @@ class EditItemFragment : Fragment() {
             State.Loading -> binding.progressBar.visible()
 
             is State.Success -> {
-                with(binding){
+                with(binding) {
                     progressBar.invisible()
-                    itemName.text?.clear()
-                    itemQuantity.text?.clear()
-                    itemDescription.text?.clear()
+                    findNavController().navigateUp()
                     showToast("Updated item successfully")
                 }
             }
