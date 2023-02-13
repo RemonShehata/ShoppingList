@@ -1,14 +1,7 @@
 package com.example.shoppinglist.data.local
 
-import android.util.Log
-import androidx.room.Dao
-import androidx.room.Delete
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
-import androidx.room.Query
-import androidx.room.Update
+import androidx.room.*
 import com.example.shoppinglist.data.BoughtFilter
-import com.example.shoppinglist.data.FilterPreferences
 import com.example.shoppinglist.data.local.models.ShoppingEntity
 import kotlinx.coroutines.flow.Flow
 
@@ -44,20 +37,18 @@ interface ShoppingListDao {
         searchQuery: String,
     ): Flow<List<ShoppingEntity>>
 
-    @Query("SELECT * FROM shopping_entity WHERE is_bought = 0")
-    fun getShoppingListNotBoughtItemsFlow(): Flow<List<ShoppingEntity>>
-
-    @Query("SELECT * FROM shopping_entity WHERE is_bought = 1")
-    fun getShoppingListBoughtItemsFlow(): Flow<List<ShoppingEntity>>
 
     @Query("UPDATE shopping_entity SET is_bought = :isBought WHERE name = :itemName")
     suspend fun updateBoughtStatus(itemName: String, isBought: Boolean): Int
-    fun getShoppingListFlowWithFilter(boughtFilter: BoughtFilter): Flow<List<ShoppingEntity>> {
-        Log.d("Remon", "getShoppingListFlowWithFilter: ${boughtFilter.name}")
+
+    fun getShoppingListWithFiltersFlow(
+        query: String,
+        boughtFilter: BoughtFilter
+    ): Flow<List<ShoppingEntity>> {
         return when (boughtFilter) {
-            BoughtFilter.BOUGHT -> getShoppingListBoughtItemsFlow()
-            BoughtFilter.NOT_BOUGHT -> getShoppingListNotBoughtItemsFlow()
-            BoughtFilter.BOTH -> getShoppingListItemsFlow()
+            BoughtFilter.BOUGHT -> getShoppingListItemsWithSearchFlow(query, 1)
+            BoughtFilter.NOT_BOUGHT -> getShoppingListItemsWithSearchFlow(query, 0)
+            BoughtFilter.BOTH -> getShoppingListItemsWithSearchFlow2(query)
         }
     }
 
