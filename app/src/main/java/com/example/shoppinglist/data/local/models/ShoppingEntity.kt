@@ -8,7 +8,7 @@ import androidx.room.PrimaryKey
 data class ShoppingEntity(
     @PrimaryKey(autoGenerate = false)
     @ColumnInfo(name = "name")val name: String,
-    @ColumnInfo(name = "quantity")val quantity: Int,
+    @ColumnInfo(name = "quantity")val quantity: String,
     @ColumnInfo(name = "description") val description: String,
     @ColumnInfo(name = "is_bought") val isBought: Boolean
 )

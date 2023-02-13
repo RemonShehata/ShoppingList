@@ -14,6 +14,7 @@ import com.example.shoppinglist.data.local.models.ShoppingEntity
 import com.example.shoppinglist.databinding.FragmentEditItemBinding
 import com.example.shoppinglist.utils.invisible
 import com.example.shoppinglist.utils.showToast
+import com.example.shoppinglist.utils.string
 import com.example.shoppinglist.utils.visible
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -37,9 +38,9 @@ class EditItemFragment : Fragment() {
 
             updateButton.setOnClickListener {
                 val shoppingEntity = ShoppingEntity(
-                    name = binding.itemName.text.toString(),
-                    quantity = binding.itemQuantity.text.toString().toInt(),
-                    description = binding.itemDescription.text.toString(),
+                    name = itemName.string(),
+                    quantity = itemQuantity.string(),
+                    description = itemDescription.string(),
                     isBought = itemName.isChecked
                 )
 

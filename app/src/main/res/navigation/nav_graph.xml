@@ -28,7 +28,7 @@
             app:argType="string" />
         <argument
             android:name="itemQuantity"
-            app:argType="integer" />
+            app:argType="string" />
         <argument
             android:name="itemDescription"
             app:argType="string" />
