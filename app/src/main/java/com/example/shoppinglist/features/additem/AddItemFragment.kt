@@ -1,9 +1,13 @@
 package com.example.shoppinglist.features.additem
 
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -12,9 +16,9 @@ import com.example.shoppinglist.data.InvalidField
 import com.example.shoppinglist.data.State
 import com.example.shoppinglist.data.local.models.ShoppingEntity
 import com.example.shoppinglist.databinding.FragmentAddItemBinding
-import com.example.shoppinglist.utils.string
 import com.example.shoppinglist.utils.invisible
 import com.example.shoppinglist.utils.showToast
+import com.example.shoppinglist.utils.string
 import com.example.shoppinglist.utils.visible
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -25,6 +29,17 @@ class AddItemFragment : Fragment() {
 
     private val addItemViewModel: AddItemViewModel by viewModels()
 
+    private val textWatcher = object: TextWatcher{
+        override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+
+        override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+
+        override fun afterTextChanged(s: Editable?) {
+           binding.itemName.error = null
+        }
+
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -34,9 +49,9 @@ class AddItemFragment : Fragment() {
 
             saveButton.setOnClickListener {
                 val shoppingEntity = ShoppingEntity(
-                    name = binding.itemName.string(),
-                    quantity = binding.itemQuantity.text.toString(),
-                    description = binding.itemDescription.text.toString(),
+                    name = itemName.string(),
+                    quantity = itemQuantity.string(),
+                    description = itemDescription.string(),
                     isBought = false // not bought when first added.
                 )
 
@@ -45,6 +60,15 @@ class AddItemFragment : Fragment() {
 
             cancelButton.setOnClickListener {
                 findNavController().navigateUp()
+            }
+
+            itemName.doOnTextChanged { text, _, _, _ ->
+                itemNameTextInputLayout.error = if (text.isNullOrEmpty()) EMPTY_FIELD_ERROR_MSG
+                else null
+            }
+            itemQuantity.doOnTextChanged { text, _, _, _ ->
+                itemQuantityTextInputLayout.error = if (text.isNullOrEmpty()) EMPTY_FIELD_ERROR_MSG
+                else null
             }
         }
 
@@ -68,11 +92,11 @@ class AddItemFragment : Fragment() {
                     is InsertionError.InvalidData -> {
                         when (state.errorType.fields) {
                             InvalidField.ItemName -> {
-                                binding.itemNameTextInputLayout.error = "This field can't be empty"
+                                binding.itemNameTextInputLayout.error = EMPTY_FIELD_ERROR_MSG
                             }
                             InvalidField.ItemQuantity -> {
                                 binding.itemQuantityTextInputLayout.error =
-                                    "This field can't be empty"
+                                    EMPTY_FIELD_ERROR_MSG
                             }
                         }
                     }
@@ -91,5 +115,9 @@ class AddItemFragment : Fragment() {
                 }
             }
         }
+    }
+
+    companion object {
+        private const val EMPTY_FIELD_ERROR_MSG = "This field can't be empty"
     }
 }
