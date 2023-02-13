@@ -32,6 +32,11 @@ class ShoppingListViewModel @Inject constructor(
     val itemUpdateLiveData: LiveData<State<UpdatedItem, UpdateError>> =
         itemUpdateMutableLiveData
 
+    private val itemDeleteMutableLiveData = MutableLiveData<State<Nothing?, UpdateError>>()
+
+    val itemDeleteLiveData: LiveData<State<Nothing?, UpdateError>> =
+        itemDeleteMutableLiveData
+
 
     fun getShoppingListItemsUpdates() {
         shoppingListMutableLiveData.value = State.Loading
@@ -73,6 +78,18 @@ class ShoppingListViewModel @Inject constructor(
 
     fun onBoughtFilterChanged(boughtFilter: BoughtFilter) = viewModelScope.launch {
         preferencesManager.updateHideBought(boughtFilter)
+    }
+
+    fun onDeleteClicked(shoppingEntity: ShoppingEntity) {
+        itemDeleteMutableLiveData.value = State.Loading
+        viewModelScope.launch {
+            val result = repo.removeItem(shoppingEntity)
+
+            val valueToPost = if (result > 0) State.Success(null)
+            else State.Error(UpdateError.Failure)
+
+            itemDeleteMutableLiveData.value = valueToPost
+        }
     }
 }
 

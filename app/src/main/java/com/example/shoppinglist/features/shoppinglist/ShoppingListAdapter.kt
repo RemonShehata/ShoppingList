@@ -12,7 +12,8 @@ import com.example.shoppinglist.databinding.ShoppingItemBinding
 
 class ShoppingListAdapter(
     private val onItemClicked: (item: ShoppingEntity) -> Unit,
-    private val onCheckStateChanged: (itemName: String, isChecked: Boolean) -> Unit
+    private val onCheckStateChanged: (itemName: String, isChecked: Boolean) -> Unit,
+    private val onDeleteItemClicked: (shoppingEntity: ShoppingEntity) -> Unit
 ) :
     RecyclerView.Adapter<ShoppingListAdapter.ShoppingListViewHolder>() {
 
@@ -37,6 +38,10 @@ class ShoppingListAdapter(
         with(holder.binding) {
             root.setOnClickListener {
                 onItemClicked(currentItem)
+            }
+
+            deleteButton.setOnClickListener {
+                onDeleteItemClicked(currentItem)
             }
 
             itemName.setOnCheckedChangeListener { buttonView, isChecked ->
