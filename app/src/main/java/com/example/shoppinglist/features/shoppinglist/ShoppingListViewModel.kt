@@ -9,7 +9,6 @@ import com.example.shoppinglist.data.*
 import com.example.shoppinglist.data.local.models.ShoppingEntity
 import com.example.shoppinglist.data.repos.ShoppingListRepo
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
@@ -46,27 +45,48 @@ class ShoppingListViewModel @Inject constructor(
         shoppingListMutableLiveData.value = State.Loading
 
         viewModelScope.launch {
-            combine(preferencesFlow,repo.getShoppingListFlow(), searchQuery) { prefsFlow, listFlow, query ->
+            combine(
+                preferencesFlow,
+                repo.getShoppingListFlow(),
+                searchQuery
+            ) { prefsFlow, listFlow, query ->
                 Pair(prefsFlow, query)
 
-            }.collect{
-                Log.d("Remon", "getShoppingListItemsUpdates: ${it.second}")
-            }
-
-            preferencesFlow.combine(repo.getShoppingListFlow()) { prefsFlow, listFlow ->
-                prefsFlow
             }.collect {
+                val prefsFlow = it.first
+                val filter = prefsFlow.boughtFilter
+                val query = it.second
+
+                Log.d("Remon", "getShoppingListItemsUpdates: filter = ${filter.name}")
+                Log.d("Remon", "getShoppingListItemsUpdates: query = $query")
+
                 viewModelScope.launch {
-                    val filter = it.boughtFilter
-                    repo.getShoppingListFlowWithFilter(filter).collect { shoppingList ->
-                        val sortedList = when (it.sortOrder) {
+                    repo.getShoppingListItemsWithSearchFlow(query, filter).collect { shoppingList ->
+                        val sortedList = when (prefsFlow.sortOrder) {
                             SortOrder.ASC -> shoppingList.sortedWith(compareBy { item -> item.name })
                             SortOrder.DESC -> shoppingList.sortedWith(compareByDescending { item -> item.name })
                         }
                         shoppingListMutableLiveData.value = State.Success(sortedList)
                     }
                 }
+
+
             }
+
+//            preferencesFlow.combine(repo.getShoppingListFlow()) { prefsFlow, listFlow ->
+//                prefsFlow
+//            }.collect {
+//                viewModelScope.launch {
+//                    val filter = it.boughtFilter
+//                    repo.getShoppingListFlowWithFilter(filter).collect { shoppingList ->
+//                        val sortedList = when (it.sortOrder) {
+//                            SortOrder.ASC -> shoppingList.sortedWith(compareBy { item -> item.name })
+//                            SortOrder.DESC -> shoppingList.sortedWith(compareByDescending { item -> item.name })
+//                        }
+//                        shoppingListMutableLiveData.value = State.Success(sortedList)
+//                    }
+//                }
+//            }
         }
     }
 
