@@ -22,12 +22,27 @@ interface ShoppingListDao {
     suspend fun getShoppingListItemsSync(): List<ShoppingEntity>
 
     @Query("SELECT * FROM shopping_entity")
-     fun getShoppingListItemsFlow(): Flow<List<ShoppingEntity>>
+    fun getShoppingListItemsFlow(): Flow<List<ShoppingEntity>>
 
-    @Query("SELECT * FROM shopping_entity " +
-            "WHERE name LIKE '%' || :searchQuery || '%' " +
-            "OR description LIKE '%' || :searchQuery || '%'")
-    fun getShoppingListItemsWithSearchFlow(searchQuery: String): Flow<List<ShoppingEntity>>
+    @Query(
+        "SELECT * FROM shopping_entity " +
+                "WHERE is_bought = :isBought " +
+                "AND name LIKE '%' || :searchQuery || '%' " +
+                "OR description LIKE '%' || :searchQuery || '%'"
+    )
+    fun getShoppingListItemsWithSearchFlow(
+        searchQuery: String,
+        isBought: Int
+    ): Flow<List<ShoppingEntity>>
+
+    @Query(
+        "SELECT * FROM shopping_entity " +
+                "WHERE name LIKE '%' || :searchQuery || '%' " +
+                "OR description LIKE '%' || :searchQuery || '%'"
+    )
+    fun getShoppingListItemsWithSearchFlow2(
+        searchQuery: String,
+    ): Flow<List<ShoppingEntity>>
 
     @Query("SELECT * FROM shopping_entity WHERE is_bought = 0")
     fun getShoppingListNotBoughtItemsFlow(): Flow<List<ShoppingEntity>>
@@ -36,10 +51,10 @@ interface ShoppingListDao {
     fun getShoppingListBoughtItemsFlow(): Flow<List<ShoppingEntity>>
 
     @Query("UPDATE shopping_entity SET is_bought = :isBought WHERE name = :itemName")
-     suspend fun updateBoughtStatus(itemName: String, isBought: Boolean): Int
+    suspend fun updateBoughtStatus(itemName: String, isBought: Boolean): Int
     fun getShoppingListFlowWithFilter(boughtFilter: BoughtFilter): Flow<List<ShoppingEntity>> {
         Log.d("Remon", "getShoppingListFlowWithFilter: ${boughtFilter.name}")
-        return when(boughtFilter){
+        return when (boughtFilter) {
             BoughtFilter.BOUGHT -> getShoppingListBoughtItemsFlow()
             BoughtFilter.NOT_BOUGHT -> getShoppingListNotBoughtItemsFlow()
             BoughtFilter.BOTH -> getShoppingListItemsFlow()
