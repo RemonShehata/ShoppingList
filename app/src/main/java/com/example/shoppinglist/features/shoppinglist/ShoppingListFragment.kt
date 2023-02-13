@@ -124,8 +124,8 @@ class ShoppingListFragment : Fragment(), MenuProvider {
         }
     }
 
-    private fun onItemStateUpdated(state: State<UpdatedItem, UpdateError>){
-        when(state){
+    private fun onItemStateUpdated(state: State<UpdatedItem, UpdateError>) {
+        when (state) {
             is State.Error -> showToast("couldn't update state. try again...")
             State.Loading -> {
 
