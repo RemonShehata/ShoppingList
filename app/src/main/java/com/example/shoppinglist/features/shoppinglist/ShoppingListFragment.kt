@@ -107,10 +107,6 @@ class ShoppingListFragment : Fragment(), MenuProvider {
                     )
                 )
             }
-
-            ShoppingListNavigation.None -> {
-                // do nothing
-            }
         }
     }
 
