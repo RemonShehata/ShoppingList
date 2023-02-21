@@ -21,7 +21,7 @@ import com.example.shoppinglist.utils.onQueryTextChanged
 import com.example.shoppinglist.utils.showToast
 import com.example.shoppinglist.utils.visible
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
@@ -78,39 +78,38 @@ class ShoppingListFragment : Fragment(), MenuProvider {
                 onFilterPreferenceUpdated(preferencesFlow.first())
             }
 
-//            navigationStateFlow.distinctUntilChanged().onEach { destination->
-//
-//            }.launchIn(viewLifecycleOwner.lifecycleScope)
-
             lifecycleScope.launch {
-
                 navigationStateFlow
                     .collect { nav ->
-                    when(nav){
-                        ShoppingListNavigation.AddItem -> {
-                            findNavController()
-                                .navigate(
-                                    ShoppingListFragmentDirections.actionShoppingListFragmentToAddItemFragment()
-                                )
-                        }
-
-                        is ShoppingListNavigation.ItemDetails -> {
-                            val item = nav.shoppingEntity
-                            findNavController().navigate(
-                                ShoppingListFragmentDirections.actionShoppingListFragmentToEditItemFragment(
-                                    item.name,
-                                    item.quantity,
-                                    item.description,
-                                    item.isBought
-                                )
-                            )
-                        }
-
-                        ShoppingListNavigation.None -> {
-                            // do nothing
-                        }
+                        handleNavigation(nav)
                     }
-                }
+            }
+        }
+    }
+
+    private fun handleNavigation(nav: ShoppingListNavigation) {
+        when (nav) {
+            ShoppingListNavigation.AddItem -> {
+                findNavController()
+                    .navigate(
+                        ShoppingListFragmentDirections.actionShoppingListFragmentToAddItemFragment()
+                    )
+            }
+
+            is ShoppingListNavigation.ItemDetails -> {
+                val item = nav.shoppingEntity
+                findNavController().navigate(
+                    ShoppingListFragmentDirections.actionShoppingListFragmentToEditItemFragment(
+                        item.name,
+                        item.quantity,
+                        item.description,
+                        item.isBought
+                    )
+                )
+            }
+
+            ShoppingListNavigation.None -> {
+                // do nothing
             }
         }
     }
