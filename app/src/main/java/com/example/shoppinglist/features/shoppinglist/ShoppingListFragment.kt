@@ -21,7 +21,7 @@ import com.example.shoppinglist.utils.onQueryTextChanged
 import com.example.shoppinglist.utils.showToast
 import com.example.shoppinglist.utils.visible
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
@@ -40,10 +40,7 @@ class ShoppingListFragment : Fragment(), MenuProvider {
     ): View {
         binding = FragmentShoppingListBinding.inflate(layoutInflater).apply {
             floatingActionButton.setOnClickListener {
-                findNavController()
-                    .navigate(
-                        ShoppingListFragmentDirections.actionShoppingListFragmentToAddItemFragment()
-                    )
+                shoppingListViewModel.onAddClicked()
             }
 
             chipGroup.setOnCheckedStateChangeListener { group, checkedIds ->
@@ -79,6 +76,41 @@ class ShoppingListFragment : Fragment(), MenuProvider {
             itemUpdateLiveData.observe(viewLifecycleOwner, ::onItemStateUpdated)
             lifecycleScope.launch {
                 onFilterPreferenceUpdated(preferencesFlow.first())
+            }
+
+//            navigationStateFlow.distinctUntilChanged().onEach { destination->
+//
+//            }.launchIn(viewLifecycleOwner.lifecycleScope)
+
+            lifecycleScope.launch {
+
+                navigationStateFlow
+                    .collect { nav ->
+                    when(nav){
+                        ShoppingListNavigation.AddItem -> {
+                            findNavController()
+                                .navigate(
+                                    ShoppingListFragmentDirections.actionShoppingListFragmentToAddItemFragment()
+                                )
+                        }
+
+                        is ShoppingListNavigation.ItemDetails -> {
+                            val item = nav.shoppingEntity
+                            findNavController().navigate(
+                                ShoppingListFragmentDirections.actionShoppingListFragmentToEditItemFragment(
+                                    item.name,
+                                    item.quantity,
+                                    item.description,
+                                    item.isBought
+                                )
+                            )
+                        }
+
+                        ShoppingListNavigation.None -> {
+                            // do nothing
+                        }
+                    }
+                }
             }
         }
     }
@@ -160,14 +192,7 @@ class ShoppingListFragment : Fragment(), MenuProvider {
 
 
     private val onItemClicked: (shoppingEntity: ShoppingEntity) -> Unit = { item ->
-        findNavController().navigate(
-            ShoppingListFragmentDirections.actionShoppingListFragmentToEditItemFragment(
-                item.name,
-                item.quantity,
-                item.description,
-                item.isBought
-            )
-        )
+        shoppingListViewModel.onDetailsClicked(item)
     }
 
     private val onCheckStateChanged: (itemName: String, isChecked: Boolean) -> Unit =
