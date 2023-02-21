@@ -39,10 +39,10 @@ class ShoppingListViewModel @Inject constructor(
 
     val searchQuery = MutableStateFlow("")
 
-    private val navigationMutableStateFlow =
+    private val navigationMutableSharedFlow =
         MutableSharedFlow<ShoppingListNavigation>(replay = 0)
-    val navigationStateFlow: SharedFlow<ShoppingListNavigation>
-        get() = navigationMutableStateFlow
+    val navigationSharedFlow: SharedFlow<ShoppingListNavigation>
+        get() = navigationMutableSharedFlow
 
 
     fun getShoppingListItemsUpdates() {
@@ -112,13 +112,13 @@ class ShoppingListViewModel @Inject constructor(
 
     fun onAddClicked() {
         viewModelScope.launch {
-            navigationMutableStateFlow.emit(ShoppingListNavigation.AddItem)
+            navigationMutableSharedFlow.emit(ShoppingListNavigation.AddItem)
         }
     }
 
     fun onDetailsClicked(shoppingEntity: ShoppingEntity) {
         viewModelScope.launch {
-            navigationMutableStateFlow.emit(ShoppingListNavigation.ItemDetails(shoppingEntity))
+            navigationMutableSharedFlow.emit(ShoppingListNavigation.ItemDetails(shoppingEntity))
         }
     }
 }

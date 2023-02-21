@@ -79,7 +79,7 @@ class ShoppingListFragment : Fragment(), MenuProvider {
             }
 
             lifecycleScope.launch {
-                navigationStateFlow
+                navigationSharedFlow
                     .collect { nav ->
                         handleNavigation(nav)
                     }
