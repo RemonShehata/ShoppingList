@@ -1,13 +1,15 @@
 package com.example.shoppinglist.features.shoppinglist
 
 import android.util.Log
-import androidx.lifecycle.*
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.shoppinglist.data.*
 import com.example.shoppinglist.data.local.models.ShoppingEntity
 import com.example.shoppinglist.data.repos.ShoppingListRepo
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -36,6 +38,11 @@ class ShoppingListViewModel @Inject constructor(
         itemDeleteMutableLiveData
 
     val searchQuery = MutableStateFlow("")
+
+    private val navigationMutableStateFlow =
+        MutableSharedFlow<ShoppingListNavigation>(replay = 0)
+    val navigationStateFlow: SharedFlow<ShoppingListNavigation>
+        get() = navigationMutableStateFlow
 
 
     fun getShoppingListItemsUpdates() {
@@ -102,9 +109,28 @@ class ShoppingListViewModel @Inject constructor(
             itemDeleteMutableLiveData.value = valueToPost
         }
     }
+
+    fun onAddClicked() {
+        viewModelScope.launch {
+            navigationMutableStateFlow.emit(ShoppingListNavigation.AddItem)
+        }
+    }
+
+    fun onDetailsClicked(shoppingEntity: ShoppingEntity) {
+        viewModelScope.launch {
+            navigationMutableStateFlow.emit(ShoppingListNavigation.ItemDetails(shoppingEntity))
+        }
+    }
 }
 
 data class UpdatedItem(
     val itemName: String,
     val isBought: Boolean
 )
+
+sealed class ShoppingListNavigation {
+
+    object None : ShoppingListNavigation()
+    data class ItemDetails(val shoppingEntity: ShoppingEntity) : ShoppingListNavigation()
+    object AddItem : ShoppingListNavigation()
+}
