@@ -129,8 +129,6 @@ data class UpdatedItem(
 )
 
 sealed class ShoppingListNavigation {
-
-    object None : ShoppingListNavigation()
     data class ItemDetails(val shoppingEntity: ShoppingEntity) : ShoppingListNavigation()
     object AddItem : ShoppingListNavigation()
 }
