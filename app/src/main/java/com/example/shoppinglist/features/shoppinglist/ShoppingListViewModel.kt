@@ -9,7 +9,10 @@ import com.example.shoppinglist.data.*
 import com.example.shoppinglist.data.local.models.ShoppingEntity
 import com.example.shoppinglist.data.repos.ShoppingListRepo
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -43,7 +46,6 @@ class ShoppingListViewModel @Inject constructor(
         MutableSharedFlow<ShoppingListNavigation>(replay = 0)
     val navigationSharedFlow: SharedFlow<ShoppingListNavigation>
         get() = navigationMutableSharedFlow
-
 
     fun getShoppingListItemsUpdates() {
         shoppingListMutableLiveData.value = State.Loading
